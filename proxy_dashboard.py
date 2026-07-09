@@ -21,57 +21,179 @@ app = Flask(__name__)
 # CONFIGURATION
 # =============================================================================
 
-# Indonesian Cities Configuration
+# Indonesian Cities Configuration (Expanded)
 INDONESIAN_CITIES = {
-    "jakarta": {"name": "Jakarta", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
-    "bandung": {"name": "Bandung", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa"},
-    "surabaya": {"name": "Surabaya", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa"},
-    "semarang": {"name": "Semarang", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa"},
-    "yogyakarta": {"name": "Yogyakarta", "province": "DI Yogyakarta", "timezone": "WIB (UTC+7)", "region": "jawa"},
-    "medan": {"name": "Medan", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera"},
-    "makassar": {"name": "Makassar", "province": "Sulawesi Selatan", "timezone": "WITA (UTC+8)", "region": "sulawesi"},
-    "denpasar": {"name": "Denpasar", "province": "Bali", "timezone": "WITA (UTC+8)", "region": "bali"},
-    "palembang": {"name": "Palembang", "province": "Sumatera Selatan", "timezone": "WIB (UTC+7)", "region": "sumatera"},
-    "tangerang": {"name": "Tangerang", "province": "Banten", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    # Jawa Barat
+    "jakarta_pusat": {"name": "Jakarta Pusat", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "jakarta_barat": {"name": "Jakarta Barat", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "jakarta_timur": {"name": "Jakarta Timur", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "jakarta_selatan": {"name": "Jakarta Selatan", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "jakarta_utara": {"name": "Jakarta Utara", "province": "DKI Jakarta", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "bandung": {"name": "Bandung", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa_barat"},
     "bekasi": {"name": "Bekasi", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
     "depok": {"name": "Depok", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
     "bogor": {"name": "Bogor", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
-    "malang": {"name": "Malang", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa"},
-    "pontianak": {"name": "Pontianak", "province": "Kalimantan Barat", "timezone": "WIB (UTC+7)", "region": "kalimantan"},
-    "samarinda": {"name": "Samarinda", "province": "Kalimantan Timur", "timezone": "WITA (UTC+8)", "region": "kalimantan"},
-    "banjarmasin": {"name": "Banjarmasin", "province": "Kalimantan Selatan", "timezone": "WITA (UTC+8)", "region": "kalimantan"},
+    "tangerang": {"name": "Tangerang", "province": "Banten", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "tangerang_selatan": {"name": "Tangerang Selatan", "province": "Banten", "timezone": "WIB (UTC+7)", "region": "jabodetabek"},
+    "cirebon": {"name": "Cirebon", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa_barat"},
+    "sukabumi": {"name": "Sukabumi", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa_barat"},
+    "karawang": {"name": "Karawang", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa_barat"},
+    "bandung_barat": {"name": "Bandung Barat", "province": "Jawa Barat", "timezone": "WIB (UTC+7)", "region": "jawa_barat"},
+
+    # Jawa Tengah
+    "semarang": {"name": "Semarang", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "yogyakarta": {"name": "Yogyakarta", "province": "DI Yogyakarta", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "solo": {"name": "Surakarta/Solo", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "kudus": {"name": "Kudus", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "solo": {"name": "Solo", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "tegal": {"name": "Tegal", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "pekalongan": {"name": "Pekalongan", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "magelang": {"name": "Magelang", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+    "salatiga": {"name": "Salatiga", "province": "Jawa Tengah", "timezone": "WIB (UTC+7)", "region": "jawa_tengah"},
+
+    # Jawa Timur
+    "surabaya": {"name": "Surabaya", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "malang": {"name": "Malang", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "sidoarjo": {"name": "Sidoarjo", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "gresik": {"name": "Gresik", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "pasuruan": {"name": "Pasuruan", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "mojokerto": {"name": "Mojokerto", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "kediri": {"name": "Kediri", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "jeneponto": {"name": "Jember", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "banyuwangi": {"name": "Banyuwangi", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "lamongan": {"name": "Lamongan", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "tuban": {"name": "Tuban", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+    "bojonegoro": {"name": "Bojonegoro", "province": "Jawa Timur", "timezone": "WIB (UTC+7)", "region": "jawa_timur"},
+
+    # Sumatera Utara
+    "medan": {"name": "Medan", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera_utara"},
+    "binjai": {"name": "Binjai", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera_utara"},
+    "deliserdang": {"name": "Deli Serdang", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera_utara"},
+    "pematangsiantar": {"name": "Pematangsiantar", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera_utara"},
+    "tebingtinggi": {"name": "Tebing Tinggi", "province": "Sumatera Utara", "timezone": "WIB (UTC+7)", "region": "sumatera_utara"},
+
+    # Sumatera Barat
+    "padang": {"name": "Padang", "province": "Sumatera Barat", "timezone": "WIB (UTC+7)", "region": "sumatera_barat"},
+    "bukittinggi": {"name": "Bukittinggi", "province": "Sumatera Barat", "timezone": "WIB (UTC+7)", "region": "sumatera_barat"},
+    "padang_panjang": {"name": "Padang Panjang", "province": "Sumatera Barat", "timezone": "WIB (UTC+7)", "region": "sumatera_barat"},
+    "solok": {"name": "Solok", "province": "Sumatera Barat", "timezone": "WIB (UTC+7)", "region": "sumatera_barat"},
+
+    # Sumatera Selatan
+    "palembang": {"name": "Palembang", "province": "Sumatera Selatan", "timezone": "WIB (UTC+7)", "region": "sumatera_selatan"},
+    "lubuklinggau": {"name": "Lubuklinggau", "province": "Sumatera Selatan", "timezone": "WIB (UTC+7)", "region": "sumatera_selatan"},
+    "prabumulih": {"name": "Prabumulih", "province": "Sumatera Selatan", "timezone": "WIB (UTC+7)", "region": "sumatera_selatan"},
+    "palembang": {"name": "Palembang", "province": "Sumatera Selatan", "timezone": "WIB (UTC+7)", "region": "sumatera_selatan"},
+
+    # Riau
+    "pekanbaru": {"name": "Pekanbaru", "province": "Riau", "timezone": "WIB (UTC+7)", "region": "riau"},
+    "dumai": {"name": "Dumai", "province": "Riau", "timezone": "WIB (UTC+7)", "region": "riau"},
+    "batam": {"name": "Batam", "province": "Kepulauan Riau", "timezone": "WIB (UTC+7)", "region": "kepulauan_riau"},
+    "tanjungpinang": {"name": "Tanjung Pinang", "province": "Kepulauan Riau", "timezone": "WIB (UTC+7)", "region": "kepulauan_riau"},
+
+    # Lampung
+    "bandarlampung": {"name": "Bandar Lampung", "province": "Lampung", "timezone": "WIB (UTC+7)", "region": "lampung"},
+    "metro": {"name": "Metro", "province": "Lampung", "timezone": "WIB (UTC+7)", "region": "lampung"},
+
+    # Banten
+    "serang": {"name": "Serang", "province": "Banten", "timezone": "WIB (UTC+7)", "region": "banten"},
+    "cilegon": {"name": "Cilegon", "province": "Banten", "timezone": "WIB (UTC+7)", "region": "banten"},
+
+    # Kalimantan Barat
+    "pontianak": {"name": "Pontianak", "province": "Kalimantan Barat", "timezone": "WIB (UTC+7)", "region": "kalimantan_barat"},
+    "singkawang": {"name": "Singkawang", "province": "Kalimantan Barat", "timezone": "WIB (UTC+7)", "region": "kalimantan_barat"},
+    "ketapang": {"name": "Ketapang", "province": "Kalimantan Barat", "timezone": "WIB (UTC+7)", "region": "kalimantan_barat"},
+
+    # Kalimantan Timur
+    "samarinda": {"name": "Samarinda", "province": "Kalimantan Timur", "timezone": "WITA (UTC+8)", "region": "kalimantan_timur"},
+    "balikpapan": {"name": "Balikpapan", "province": "Kalimantan Timur", "timezone": "WITA (UTC+8)", "region": "kalimantan_timur"},
+    "bontang": {"name": "Bontang", "province": "Kalimantan Timur", "timezone": "WITA (UTC+8)", "region": "kalimantan_timur"},
+    "tarakan": {"name": "Tarakan", "province": "Kalimantan Utara", "timezone": "WITA (UTC+8)", "region": "kalimantan_utara"},
+
+    # Kalimantan Selatan
+    "banjarmasin": {"name": "Banjarmasin", "province": "Kalimantan Selatan", "timezone": "WITA (UTC+8)", "region": "kalimantan_selatan"},
+    "banjarbaru": {"name": "Banjarbaru", "province": "Kalimantan Selatan", "timezone": "WITA (UTC+8)", "region": "kalimantan_selatan"},
+
+    # Sulawesi
+    "makassar": {"name": "Makassar", "province": "Sulawesi Selatan", "timezone": "WITA (UTC+8)", "region": "sulawesi_selatan"},
+    "parepare": {"name": "Parepare", "province": "Sulawesi Selatan", "timezone": "WITA (UTC+8)", "region": "sulawesi_selatan"},
+    "palopo": {"name": "Palopo", "province": "Sulawesi Selatan", "timezone": "WITA (UTC+8)", "region": "sulawesi_selatan"},
+    "manado": {"name": "Manado", "province": "Sulawesi Utara", "timezone": "WITA (UTC+8)", "region": "sulawesi_utara"},
+    "bitung": {"name": "Bitung", "province": "Sulawesi Utara", "timezone": "WITA (UTC+8)", "region": "sulawesi_utara"},
+    "tomohon": {"name": "Tomohon", "province": "Sulawesi Utara", "timezone": "WITA (UTC+8)", "region": "sulawesi_utara"},
+    "kendari": {"name": "Kendari", "province": "Sulawesi Tenggara", "timezone": "WITA (UTC+8)", "region": "sulawesi_tenggara"},
+    "bau-bau": {"name": "Bau-Bau", "province": "Sulawesi Tenggara", "timezone": "WITA (UTC+8)", "region": "sulawesi_tenggara"},
+    "gorontalo": {"name": "Gorontalo", "province": "Gorontalo", "timezone": "WITA (UTC+8)", "region": "gorontalo"},
+    "palu": {"name": "Palu", "province": "Sulawesi Tengah", "timezone": "WITA (UTC+8)", "region": "sulawesi_tengah"},
+
+    # Bali
+    "denpasar": {"name": "Denpasar", "province": "Bali", "timezone": "WITA (UTC+8)", "region": "bali"},
+    "badung": {"name": "Badung", "province": "Bali", "timezone": "WITA (UTC+8)", "region": "bali"},
+    "gianyar": {"name": "Gianyar", "province": "Bali", "timezone": "WITA (UTC+8)", "region": "bali"},
+    "singaraja": {"name": "Singaraja", "province": "Bali", "timezone": "WITA (UTC+8)", "region": "bali"},
+    "mataram": {"name": "Mataram", "province": "Nusa Tenggara Barat", "timezone": "WITA (UTC+8)", "region": "ntb"},
+    "lombok": {"name": "Lombok", "province": "Nusa Tenggara Barat", "timezone": "WITA (UTC+8)", "region": "ntb"},
+    "kupang": {"name": "Kupang", "province": "Nusa Tenggara Timur", "timezone": "WITA (UTC+8)", "region": "ntt"},
+
+    # Maluku
+    "ambon": {"name": "Ambon", "province": "Maluku", "timezone": "WIT (UTC+9)", "region": "maluku"},
+    "tual": {"name": "Tual", "province": "Maluku", "timezone": "WIT (UTC+9)", "region": "maluku"},
+
+    # Papua
     "jayapura": {"name": "Jayapura", "province": "Papua", "timezone": "WIT (UTC+9)", "region": "papua"},
+    "sorong": {"name": "Sorong", "province": "Papua Barat", "timezone": "WIT (UTC+9)", "region": "papua_barat"},
+    "manokwari": {"name": "Manokwari", "province": "Papua Barat", "timezone": "WIT (UTC+9)", "region": "papua_barat"},
+    "merauke": {"name": "Merauke", "province": "Papua", "timezone": "WIT (UTC+9)", "region": "papua"},
+    "wamena": {"name": "Wamena", "province": "Papua", "timezone": "WIT (UTC+9)", "region": "papua"},
+}
+
+# Regions
+REGIONS = {
+    "jabodetabek": "Jabodetabek",
+    "jawa_barat": "Jawa Barat",
+    "jawa_tengah": "Jawa Tengah & DIY",
+    "jawa_timur": "Jawa Timur",
+    "sumatera_utara": "Sumatera Utara",
+    "sumatera_barat": "Sumatera Barat",
+    "sumatera_selatan": "Sumatera Selatan",
+    "riau": "Riau",
+    "kepulauan_riau": "Kepulauan Riau",
+    "lampung": "Lampung",
+    "banten": "Banten",
+    "kalimantan_barat": "Kalimantan Barat",
+    "kalimantan_timur": "Kalimantan Timur",
+    "kalimantan_selatan": "Kalimantan Selatan",
+    "kalimantan_utara": "Kalimantan Utara",
+    "sulawesi_selatan": "Sulawesi Selatan",
+    "sulawesi_utara": "Sulawesi Utara",
+    "sulawesi_tengah": "Sulawesi Tengah",
+    "sulawesi_tenggara": "Sulawesi Tenggara",
+    "gorontalo": "Gorontalo",
+    "bali": "Bali",
+    "ntb": "Nusa Tenggara Barat",
+    "ntt": "Nusa Tenggara Timur",
+    "maluku": "Maluku",
+    "papua": "Papua",
+    "papua_barat": "Papua Barat",
 }
 
 # Indonesian Mobile Carriers
 MOBILE_CARRIERS = {
-    "telkomsel": {"name": "Telkomsel", "icon": "📶", "color": "#e50914"},
-    "indosat": {"name": "Indosat Ooredoo", "icon": "📱", "color": "#ff6600"},
-    "xl": {"name": "XL Axiata", "icon": "📲", "color": "#0066cc"},
-    "three": {"name": "3 (Three)", "icon": "3️⃣", "color": "#ff0000"},
-    "smartfren": {"name": "Smartfren", "icon": "🚀", "color": "#00cc00"},
-    "axis": {"name": "Axis", "icon": "✖️", "color": "#ff9900"},
+    "telkomsel": {"name": "Telkomsel", "color": "#e50914"},
+    "indosat": {"name": "Indosat Ooredoo", "color": "#ff6600"},
+    "xl": {"name": "XL Axiata", "color": "#0066cc"},
+    "three": {"name": "Three", "color": "#ff0000"},
+    "smartfren": {"name": "Smartfren", "color": "#00cc00"},
+    "axis": {"name": "Axis", "color": "#ff9900"},
 }
 
-# Indonesian ISPs
+# ISPs
 ISP_PROVIDERS = {
-    "telkom": {"name": "Telkom Indonesia", "product": "Indihome", "icon": "🏠"},
-    "biznet": {"name": "Biznet", "icon": "🌐"},
-    "myrepublic": {"name": "MyRepublic", "icon": "🔷"},
-    "cbn": {"name": "CBN", "icon": "🔶"},
-    "firstmedia": {"name": "First Media", "icon": "📺"},
-    "xl_home": {"name": "XL Home", "icon": "📡"},
-}
-
-# Regions for grouping
-REGIONS = {
-    "jabodetabek": "Jabodetabek",
-    "jawa": "Jawa",
-    "sumatera": "Sumatera",
-    "kalimantan": "Kalimantan",
-    "sulawesi": "Sulawesi",
-    "bali": "Bali & Nusa Tenggara",
-    "papua": "Papua & Maluku",
+    "telkom": "Telkom Indonesia (Indihome)",
+    "biznet": "Biznet",
+    "myrepublic": "MyRepublic",
+    "cbn": "CBN",
+    "firstmedia": "First Media",
+    "xl_home": "XL Home",
 }
 
 # =============================================================================
@@ -90,16 +212,24 @@ class DashboardState:
         self.current_ip = None
         self.request_count = 0
         self.ip_history = []
-        self.is_rotating = False
         self.last_rotation = None
 
         # Targeting settings
         self.targeting = {
-            "city": "jakarta",
             "region": "jabodetabek",
+            "city": "jakarta_pusat",
             "carrier": None,
             "isp": None,
-            "device_type": "desktop",  # desktop, mobile
+            "device_type": "desktop",
+            "browser": "chrome",
+        }
+
+        # Batch settings
+        self.batch_settings = {
+            "interval_minutes": 5,
+            "data_per_batch": 10,
+            "max_per_hour": 20,
+            "randomize_interval": True,
         }
 
         # Submission stats
@@ -111,18 +241,15 @@ class DashboardState:
             "challenge": 0,
         }
 
-        # Session data
-        self.sessions = []
+        # Target URL
+        self.target_url = "https://example.com/form"
 
         # Auto-rotate settings
         self.auto_rotate = {
             "enabled": False,
-            "interval": 60,  # seconds
+            "interval": 60,
             "max_per_hour": 10,
         }
-
-        # Target URL
-        self.target_url = "https://example.com"
 
         # Rotate on start
         self._rotate_ip()
@@ -130,30 +257,36 @@ class DashboardState:
     def _rotate_ip(self):
         """Generate a new IP based on targeting settings."""
         with self.lock:
-            city = self.targeting["city"]
-            city_data = INDONESIAN_CITIES.get(city, INDONESIAN_CITIES["jakarta"])
+            region = self.targeting.get("region", "jabodetabek")
+            city = self.targeting.get("city", "jakarta_pusat")
+            city_data = INDONESIAN_CITIES.get(city, INDONESIAN_CITIES.get("jakarta_pusat"))
 
             # Generate realistic Indonesian IP patterns
             ip_prefixes = {
-                "jabodetabek": ["101.128.", "114.4.", "116.12.", "180.214.", "182.253."],
-                "jawa": ["125.160.", "222.124.", "180.250.", "202.62.", "115.85."],
-                "sumatera": ["139.192.", "180.243.", "114.125.", "125.214.", "202.70."],
-                "kalimantan": ["36.91.", "114.127.", "180.249.", "103.106.", "116.206."],
-                "sulawesi": ["180.214.", "114.5.", "116.58.", "202.67.", "125.162."],
-                "bali": ["36.84.", "114.57.", "180.248.", "103.95.", "116.206."],
-                "papua": ["202.62.", "116.66.", "180.250.", "114.10.", "125.165."],
+                "jabodetabek": ["101.128.", "114.4.", "116.12.", "180.214.", "182.253.", "139.192."],
+                "jawa_barat": ["125.160.", "222.124.", "180.250.", "202.62.", "115.85."],
+                "jawa_tengah": ["180.243.", "114.125.", "125.214.", "202.70.", "139.192."],
+                "jawa_timur": ["36.91.", "114.127.", "180.249.", "103.106.", "116.206."],
+                "sumatera_utara": ["139.192.", "180.243.", "114.125.", "125.214."],
+                "sumatera_barat": ["180.250.", "202.62.", "115.85.", "125.160."],
+                "sumatera_selatan": ["125.160.", "180.243.", "114.125.", "125.214."],
+                "riau": ["36.84.", "114.57.", "180.248.", "103.95."],
+                "kalimantan_barat": ["36.91.", "114.127.", "180.249.", "103.106."],
+                "kalimantan_timur": ["116.206.", "36.84.", "114.57.", "180.248."],
+                "sulawesi_selatan": ["180.214.", "114.5.", "116.58.", "202.67."],
+                "bali": ["36.84.", "114.57.", "180.248.", "103.95."],
+                "papua": ["202.62.", "116.66.", "180.250.", "114.10."],
             }
 
-            region = self.targeting.get("region", "jabodetabek")
             prefixes = ip_prefixes.get(region, ip_prefixes["jabodetabek"])
             prefix = random.choice(prefixes)
 
-            # Generate rest of IP
-            if "." in prefix:
+            # Generate IP
+            if prefix.endswith("."):
                 parts = prefix.rstrip(".").split(".")
                 new_ip = f"{parts[0]}.{parts[1]}.{random.randint(1,255)}.{random.randint(1,254)}"
             else:
-                new_ip = f"{prefix}{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,254)}"
+                new_ip = f"{prefix}{random.randint(1,255)}.{random.randint(1,254)}"
 
             self.current_ip = new_ip
             self.request_count += 1
@@ -174,76 +307,73 @@ class DashboardState:
 
             return new_ip
 
-    def rotate(self, new_city=None):
-        """Rotate IP, optionally with new city targeting."""
+    def rotate(self, new_city=None, new_region=None):
+        """Rotate IP, optionally with new city/region targeting."""
         with self.lock:
+            if new_region:
+                self.targeting["region"] = new_region
             if new_city:
                 self.targeting["city"] = new_city
-                # Update region based on city
-                for region, cities in REGIONS.items():
-                    if new_city in [c for c, d in INDONESIAN_CITIES.items() if d.get("region") == region]:
-                        self.targeting["region"] = region
-                        break
             return self._rotate_ip()
 
     def get_status(self):
         """Get current dashboard status."""
         with self.lock:
-            city_data = INDONESIAN_CITIES.get(self.targeting["city"], INDONESIAN_CITIES["jakarta"])
+            city_data = INDONESIAN_CITIES.get(self.targeting["city"], INDONESIAN_CITIES.get("jakarta_pusat"))
             return {
                 "current_ip": self.current_ip,
                 "request_count": self.request_count,
                 "last_rotation": self.last_rotation,
-                "proxy_url": f"http://{self.proxy_config['username']}:{self.proxy_config['password']}@{self.proxy_config['host']}:{self.proxy_config['port']}" if self.proxy_config['username'] else f"http://{self.proxy_config['host']}:{self.proxy_config['port']}",
-                "proxy_host": self.proxy_config["host"],
-                "proxy_port": self.proxy_config["port"],
-                "proxy_user": self.proxy_config["username"],
-                "proxy_pass": self.proxy_config["password"],
+                "proxy_config": self.proxy_config.copy(),
                 "targeting": self.targeting.copy(),
                 "targeting_city": city_data,
+                "batch_settings": self.batch_settings.copy(),
                 "submission_stats": self.submission_stats.copy(),
                 "auto_rotate": self.auto_rotate.copy(),
                 "target_url": self.target_url,
-                "history": self.ip_history[-15:],
+                "history": self.ip_history[-20:],
+                "regions": REGIONS,
+                "cities": INDONESIAN_CITIES,
+                "carriers": MOBILE_CARRIERS,
+                "isps": ISP_PROVIDERS,
             }
 
     def update_targeting(self, targeting_data):
         """Update targeting settings."""
         with self.lock:
-            if "city" in targeting_data:
-                self.targeting["city"] = targeting_data["city"]
-            if "region" in targeting_data:
-                self.targeting["region"] = targeting_data["region"]
-            if "carrier" in targeting_data:
-                self.targeting["carrier"] = targeting_data["carrier"]
-            if "isp" in targeting_data:
-                self.targeting["isp"] = targeting_data["isp"]
-            if "device_type" in targeting_data:
-                self.targeting["device_type"] = targeting_data["device_type"]
+            for key in ["region", "city", "carrier", "isp", "device_type", "browser"]:
+                if key in targeting_data:
+                    self.targeting[key] = targeting_data[key]
             return self.targeting.copy()
+
+    def update_batch_settings(self, settings):
+        """Update batch settings."""
+        with self.lock:
+            for key in ["interval_minutes", "data_per_batch", "max_per_hour", "randomize_interval"]:
+                if key in settings:
+                    if key == "randomize_interval":
+                        self.batch_settings[key] = bool(settings[key])
+                    else:
+                        self.batch_settings[key] = int(settings[key])
+            return self.batch_settings.copy()
 
     def update_proxy_config(self, config_data):
         """Update proxy configuration."""
         with self.lock:
-            if "host" in config_data:
-                self.proxy_config["host"] = config_data["host"]
-            if "port" in config_data:
-                self.proxy_config["port"] = config_data["port"]
-            if "username" in config_data:
-                self.proxy_config["username"] = config_data["username"]
-            if "password" in config_data:
-                self.proxy_config["password"] = config_data["password"]
+            for key in ["host", "port", "username", "password"]:
+                if key in config_data:
+                    self.proxy_config[key] = config_data[key]
             return self.proxy_config.copy()
 
     def update_auto_rotate(self, config):
         """Update auto-rotate settings."""
         with self.lock:
-            if "enabled" in config:
-                self.auto_rotate["enabled"] = config["enabled"]
-            if "interval" in config:
-                self.auto_rotate["interval"] = config["interval"]
-            if "max_per_hour" in config:
-                self.auto_rotate["max_per_hour"] = config["max_per_hour"]
+            for key in ["enabled", "interval", "max_per_hour"]:
+                if key in config:
+                    if key == "enabled":
+                        self.auto_rotate[key] = bool(config[key])
+                    else:
+                        self.auto_rotate[key] = int(config[key])
             return self.auto_rotate.copy()
 
     def update_target_url(self, url):
@@ -257,7 +387,7 @@ class DashboardState:
         with self.lock:
             for key, value in stats.items():
                 if key in self.submission_stats:
-                    self.submission_stats[key] = value
+                    self.submission_stats[key] = int(value)
             return self.submission_stats.copy()
 
 # Global state
@@ -273,7 +403,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 Proxy & Lead Dashboard - Indonesia Focus</title>
+    <title>Proxy Detection Dashboard - Indonesia</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -283,147 +413,175 @@ HTML_TEMPLATE = """
         }
 
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #10b981;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --info: #3b82f6;
-            --dark: #0f172a;
-            --darker: #020617;
-            --card: #1e293b;
-            --card-hover: #334155;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            background: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.5;
             min-height: 100vh;
-            color: var(--text);
-            line-height: 1.6;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
 
         /* Header */
         header {
-            text-align: center;
-            padding: 30px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 30px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 20px 0;
+            margin-bottom: 24px;
+        }
+
+        header .container {
+            padding: 0 24px;
         }
 
         header h1 {
-            font-size: 2.5em;
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            color: var(--gray-900);
         }
 
         header .subtitle {
-            color: var(--text-muted);
-            font-size: 1.1em;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 4px;
         }
 
-        /* Grid Layout */
-        .dashboard-grid {
+        /* Grid */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 20px;
+            gap: 24px;
         }
 
-        .col-4 { grid-column: span 4; }
-        .col-6 { grid-column: span 6; }
-        .col-8 { grid-column: span 8; }
-        .col-12 { grid-column: span 12; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-sidebar { grid-template-columns: 1fr 2fr; }
 
         @media (max-width: 1200px) {
-            .col-4, .col-6, .col-8 { grid-column: span 6; }
+            .grid-sidebar { grid-template-columns: 1fr; }
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
-            .col-4, .col-6, .col-8, .col-12 { grid-column: span 12; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
         }
 
-        /* Cards */
+        /* Card */
         .card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
         }
 
         .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
         }
 
         .card-title {
-            font-size: 1.1em;
+            font-size: 0.875rem;
             font-weight: 600;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .card-title .icon {
-            font-size: 1.3em;
+        .card-body {
+            padding: 20px;
         }
 
         /* IP Display */
         .ip-display {
             text-align: center;
-            padding: 40px 0;
+            padding: 32px 20px;
         }
 
         .ip-label {
-            color: var(--text-muted);
-            font-size: 0.9em;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-500);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .ip-value {
-            font-size: 3em;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: var(--secondary);
+            color: var(--primary);
             font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            letter-spacing: -1px;
         }
 
         .city-badge {
             display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: rgba(99, 102, 241, 0.2);
-            border: 1px solid var(--primary);
-            border-radius: 50px;
-            font-size: 0.9em;
-            color: var(--primary);
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--gray-200);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .stat-item {
+            background: var(--white);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .stat-value.success { color: var(--success); }
+        .stat-value.failed { color: var(--danger); }
+        .stat-value.pending { color: var(--warning); }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
         /* Buttons */
@@ -432,42 +590,42 @@ HTML_TEMPLATE = """
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 14px 28px;
-            font-size: 1em;
+            padding: 12px 24px;
+            font-size: 0.875rem;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-secondary {
-            background: var(--card-hover);
-            color: var(--text);
-            border: 1px solid var(--border);
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
         }
 
         .btn-secondary:hover {
-            background: var(--border);
+            background: var(--gray-200);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            background: var(--success);
             color: white;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            background: var(--danger);
             color: white;
         }
 
@@ -475,146 +633,68 @@ HTML_TEMPLATE = """
             width: 100%;
         }
 
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.813rem;
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none !important;
         }
 
-        /* Rotate Button */
-        .rotate-section {
-            margin-top: 25px;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: 700;
-        }
-
-        .stat-value.success { color: var(--secondary); }
-        .stat-value.failed { color: var(--danger); }
-        .stat-value.pending { color: var(--warning); }
-        .stat-value.challenge { color: var(--info); }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.85em;
-            margin-top: 5px;
-        }
-
-        /* Targeting Section */
-        .targeting-section {
-            margin-bottom: 25px;
-        }
-
-        .targeting-section h4 {
-            color: var(--text-muted);
-            font-size: 0.9em;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* City Grid */
-        .city-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-        }
-
-        .city-btn {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .city-btn:hover {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--primary);
-        }
-
-        .city-btn.active {
-            background: rgba(99, 102, 241, 0.2);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .city-btn .city-name {
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-
-        .city-btn .city-region {
-            font-size: 0.75em;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Select Dropdown */
+        /* Forms */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .form-label {
             display: block;
-            color: var(--text-muted);
-            font-size: 0.85em;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
         }
 
-        .form-select, .form-input {
+        .form-select, .form-input, .form-textarea {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 1em;
-            transition: all 0.2s ease;
+            padding: 10px 14px;
+            font-size: 0.875rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--gray-900);
+            transition: all 0.2s;
         }
 
-        .form-select:focus, .form-input:focus {
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .form-select option {
-            background: var(--dark);
-            color: var(--text);
+            background: var(--white);
+            color: var(--gray-900);
         }
 
-        /* Toggle Switch */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* Toggle */
         .toggle-group {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--gray-100);
         }
 
         .toggle-group:last-child {
@@ -622,12 +702,13 @@ HTML_TEMPLATE = """
         }
 
         .toggle-label {
-            font-size: 0.95em;
+            font-size: 0.875rem;
+            color: var(--gray-700);
         }
 
         .toggle {
             position: relative;
-            width: 50px;
+            width: 48px;
             height: 26px;
         }
 
@@ -640,11 +721,8 @@ HTML_TEMPLATE = """
         .toggle-slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--card-hover);
+            inset: 0;
+            background: var(--gray-300);
             border-radius: 26px;
             transition: 0.3s;
         }
@@ -666,12 +744,129 @@ HTML_TEMPLATE = """
         }
 
         .toggle input:checked + .toggle-slider:before {
-            transform: translateX(24px);
+            transform: translateX(22px);
+        }
+
+        /* Region/City Selector */
+        .region-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .region-tab {
+            padding: 8px 16px;
+            font-size: 0.813rem;
+            font-weight: 500;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray-700);
+        }
+
+        .region-tab:hover {
+            background: var(--gray-200);
+        }
+
+        .region-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .city-btn {
+            padding: 10px 12px;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .city-btn:hover {
+            border-color: var(--primary-light);
+            background: var(--gray-100);
+        }
+
+        .city-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .city-btn .city-name {
+            font-size: 0.813rem;
+            font-weight: 500;
+        }
+
+        .city-btn .city-tz {
+            font-size: 0.688rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .city-btn.active .city-tz {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Batch Settings */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+
+        .setting-desc {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .setting-control {
+            width: 120px;
+        }
+
+        .setting-control input {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            text-align: center;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
         }
 
         /* History List */
         .history-list {
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
         }
 
@@ -680,90 +875,90 @@ HTML_TEMPLATE = """
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-family: 'SF Mono', 'Monaco', monospace;
-            font-size: 0.9em;
-            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--gray-100);
+            transition: background 0.2s;
         }
 
         .history-item:hover {
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--gray-50);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
         }
 
         .history-ip {
-            color: var(--secondary);
+            font-family: 'SF Mono', 'Monaco', Consolas, monospace;
+            font-size: 0.875rem;
             font-weight: 600;
+            color: var(--primary);
         }
 
         .history-meta {
             display: flex;
             align-items: center;
-            gap: 15px;
-            color: var(--text-muted);
-            font-size: 0.8em;
+            gap: 12px;
         }
 
         .history-count {
-            background: rgba(99, 102, 241, 0.2);
+            font-size: 0.75rem;
+            background: var(--gray-100);
             padding: 2px 10px;
             border-radius: 10px;
-            color: var(--primary);
+            color: var(--gray-600);
         }
 
-        /* Proxy Config */
-        .proxy-config {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 15px;
+        .history-city {
+            font-size: 0.813rem;
+            color: var(--gray-500);
         }
 
-        .proxy-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
+        /* Quick Actions */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        .proxy-item:last-child {
-            border-bottom: none;
+        @media (max-width: 640px) {
+            .actions-grid { grid-template-columns: 1fr; }
         }
 
-        .proxy-label {
-            color: var(--text-muted);
-            font-size: 0.85em;
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
 
-        .proxy-value {
-            color: var(--text);
-            font-family: monospace;
-            word-break: break-all;
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--text-muted);
-            font-size: 0.85em;
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 3px;
         }
 
-        /* Toast Notification */
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            background: var(--card);
-            border: 1px solid var(--secondary);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: 0.95em;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            background: var(--gray-900);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             z-index: 1000;
         }
 
@@ -772,261 +967,270 @@ HTML_TEMPLATE = """
             transform: translateY(0);
         }
 
-        .toast.error {
-            border-color: var(--danger);
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 24px 0;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-
-        /* Progress Bar */
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 4px;
-            transition: width 0.3s ease;
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--gray-500);
+            font-size: 0.813rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎯 Proxy & Lead Dashboard</h1>
+    <header>
+        <div class="container">
+            <h1>Proxy Detection Dashboard</h1>
             <p class="subtitle">Indonesia-Focused Anti-Detection System</p>
-        </header>
+        </div>
+    </header>
 
-        <div class="dashboard-grid">
-            <!-- Current IP Card -->
-            <div class="col-4">
+    <div class="container">
+        <div class="grid grid-sidebar">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <!-- Current IP -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">🌐 Current IP Address</span>
+                        <span class="card-title">Current IP</span>
                     </div>
                     <div class="ip-display">
                         <div class="ip-label">Active Session</div>
                         <div class="ip-value" id="current-ip">{{ current_ip }}</div>
                         <div class="city-badge" id="city-badge">
-                            📍 <span id="city-name">{{ targeting_city.name }}</span>, {{ targeting_city.province }}
+                            <span id="city-name">{{ targeting_city.name }}</span>, {{ targeting_city.province }}
                         </div>
                     </div>
-                    <div class="rotate-section">
-                        <button class="btn btn-primary btn-block" onclick="rotateIP()">
-                            🔄 GANTI IP SEKARANG
+                    <div class="card-body">
+                        <button class="btn btn-primary btn-block" id="rotate-btn" onclick="rotateIP()">
+                            ROTATE IP
                         </button>
-                        <div class="stats-grid" style="margin-top: 20px;">
-                            <div class="stat-box">
+                        <div class="stats-row" style="margin-top: 16px;">
+                            <div class="stat-item">
                                 <div class="stat-value" id="request-count">{{ request_count }}</div>
-                                <div class="stat-label">Total Rotasi</div>
+                                <div class="stat-label">Total</div>
                             </div>
-                            <div class="stat-box">
-                                <div class="stat-value" id="rotations-hour" style="font-size: 1.5em;">0</div>
-                                <div class="stat-label">Per Jam</div>
+                            <div class="stat-item">
+                                <div class="stat-value success" id="stat-success">{{ submission_stats.success }}</div>
+                                <div class="stat-label">Success</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value failed" id="stat-failed">{{ submission_stats.failed }}</div>
+                                <div class="stat-label">Failed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value pending" id="stat-pending">{{ submission_stats.challenge }}</div>
+                                <div class="stat-label">Challenge</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Auto-Rotate Settings -->
-                <div class="card" style="margin-top: 20px;">
+                <!-- Batch Settings -->
+                <div class="card" style="margin-top: 24px;">
                     <div class="card-header">
-                        <span class="card-title">⏰ Auto Rotate</span>
+                        <span class="card-title">Batch Settings</span>
                     </div>
-                    <div class="toggle-group">
-                        <span class="toggle-label">Enable Auto-Rotate</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="auto-rotate-toggle" onchange="toggleAutoRotate()">
-                            <span class="toggle-slider"></span>
-                        </label>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-title">Interval (minutes)</div>
+                                <div class="setting-desc">Time between batches</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="number" id="interval-minutes" value="{{ batch_settings.interval_minutes }}" min="1" max="60" onchange="updateBatchSettings()">
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-title">Data Per Batch</div>
+                                <div class="setting-desc">Leads to submit per cycle</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="number" id="data-per-batch" value="{{ batch_settings.data_per_batch }}" min="1" max="100" onchange="updateBatchSettings()">
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-title">Max Per Hour</div>
+                                <div class="setting-desc">Rate limit protection</div>
+                            </div>
+                            <div class="setting-control">
+                                <input type="number" id="max-per-hour" value="{{ batch_settings.max_per_hour }}" min="1" max="100" onchange="updateBatchSettings()">
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-title">Randomize Interval</div>
+                                <div class="setting-desc">Add variance to timing</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="randomize-interval" {% if batch_settings.randomize_interval %}checked{% endif %} onchange="updateBatchSettings()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label class="form-label">Interval (detik)</label>
-                        <input type="number" class="form-input" id="rotate-interval" value="60" min="10" max="3600" onchange="updateAutoRotateInterval()">
+                </div>
+
+                <!-- Auto Rotate -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <span class="card-title">Auto Rotate</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-title">Enable Auto-Rotate</div>
+                                <div class="setting-desc">Automatically rotate IP</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="auto-rotate-toggle" onchange="toggleAutoRotate()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 16px; margin-bottom: 0;">
+                            <label class="form-label">Rotate Interval (seconds)</label>
+                            <input type="number" class="form-input" id="rotate-interval" value="{{ auto_rotate.interval }}" min="30" max="3600" onchange="updateAutoRotateInterval()">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Targeting Card -->
-            <div class="col-8">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Target URL -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">🎯 Targeting Configuration</span>
+                        <span class="card-title">Target Configuration</span>
                     </div>
-
-                    <!-- Region Filter -->
-                    <div class="targeting-section">
-                        <h4>📍 Pilih Region</h4>
-                        <div class="city-grid" id="region-grid">
-                            <button class="city-btn active" onclick="selectRegion('jabodetabek')">
-                                <div class="city-name">🏙️ Jabodetabek</div>
-                                <div class="city-region">Jakarta, Bogor, depok</div>
-                            </button>
-                            <button class="city-btn" onclick="selectRegion('jawa')">
-                                <div class="city-name">🏝️ Jawa</div>
-                                <div class="city-region">Bandung, Surabaya, dll</div>
-                            </button>
-                            <button class="city-btn" onclick="selectRegion('sumatera')">
-                                <div class="city-name">🌴 Sumatera</div>
-                                <div class="city-region">Medan, Palembang</div>
-                            </button>
-                            <button class="city-btn" onclick="selectRegion('kalimantan')">
-                                <div class="city-name">🌿 Kalimantan</div>
-                                <div class="city-region">Pontianak, Samarinda</div>
-                            </button>
-                            <button class="city-btn" onclick="selectRegion('sulawesi')">
-                                <div class="city-name">🏔️ Sulawesi</div>
-                                <div class="city-region">Makassar</div>
-                            </button>
-                            <button class="city-btn" onclick="selectRegion('bali')">
-                                <div class="city-name">🏖️ Bali</div>
-                                <div class="city-region">Denpasar</div>
-                            </button>
+                    <div class="card-body">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Target URL</label>
+                            <input type="url" class="form-input" id="target-url" value="{{ target_url }}" placeholder="https://example.com/form">
                         </div>
                     </div>
+                </div>
 
-                    <!-- City Selection -->
-                    <div class="targeting-section">
-                        <h4>🏙️ Pilih Kota</h4>
+                <!-- Region Selection -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <span class="card-title">Region</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="region-tabs" id="region-tabs">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- City Selection -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <span class="card-title">City</span>
+                    </div>
+                    <div class="card-body">
                         <div class="city-grid" id="city-grid">
-                            <!-- Cities will be loaded dynamically -->
+                            <!-- Populated by JS -->
                         </div>
                     </div>
+                </div>
 
-                    <!-- Additional Settings -->
-                    <div class="targeting-section">
-                        <h4>📱 Device & Carrier</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <!-- Device & Browser -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <span class="card-title">Device & Browser</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Device Type</label>
                                 <select class="form-select" id="device-type" onchange="updateTargeting()">
-                                    <option value="desktop">💻 Desktop</option>
-                                    <option value="mobile">📱 Mobile</option>
+                                    <option value="desktop" {% if targeting.device_type == 'desktop' %}selected{% endif %}>Desktop</option>
+                                    <option value="mobile" {% if targeting.device_type == 'mobile' %}selected{% endif %}>Mobile</option>
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label class="form-label">Browser</label>
+                                <select class="form-select" id="browser" onchange="updateTargeting()">
+                                    <option value="chrome" {% if targeting.browser == 'chrome' %}selected{% endif %}>Chrome</option>
+                                    <option value="firefox" {% if targeting.browser == 'firefox' %}selected{% endif %}>Firefox</option>
+                                    <option value="safari" {% if targeting.browser == 'safari' %}selected{% endif %}>Safari</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
                                 <label class="form-label">Mobile Carrier (Optional)</label>
                                 <select class="form-select" id="carrier" onchange="updateTargeting()">
-                                    <option value="">-- Tidak Ada --</option>
-                                    <option value="telkomsel">📶 Telkomsel</option>
-                                    <option value="indosat">📱 Indosat</option>
-                                    <option value="xl">📲 XL Axiata</option>
-                                    <option value="three">3️⃣ Three</option>
-                                    <option value="smartfren">🚀 Smartfren</option>
-                                    <option value="axis">✖️ Axis</option>
+                                    <option value="">None</option>
+                                    {% for key, carrier in carriers.items() %}
+                                    <option value="{{ key }}" {% if targeting.carrier == key %}selected{% endif %}>{{ carrier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">ISP Provider (Optional)</label>
+                                <select class="form-select" id="isp" onchange="updateTargeting()">
+                                    <option value="">None</option>
+                                    {% for key, isp in isps.items() %}
+                                    <option value="{{ key }}" {% if targeting.isp == key %}selected{% endif %}>{{ isp }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Target URL -->
-            <div class="col-6">
-                <div class="card">
+                <!-- Proxy Configuration -->
+                <div class="card" style="margin-top: 24px;">
                     <div class="card-header">
-                        <span class="card-title">🔗 Target Configuration</span>
+                        <span class="card-title">Proxy Configuration</span>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Target URL</label>
-                        <input type="url" class="form-input" id="target-url" placeholder="https://example.com/form" value="{{ target_url }}">
-                    </div>
-                    <button class="btn btn-secondary" onclick="updateTargetURL()" style="margin-top: 10px;">
-                        💾 Simpan URL
-                    </button>
-                </div>
-            </div>
-
-            <!-- Submission Stats -->
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">📊 Submission Statistics</span>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-value" id="stat-total">{{ submission_stats.total }}</div>
-                            <div class="stat-label">Total</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Host</label>
+                                <input type="text" class="form-input" id="proxy-host" value="{{ proxy_config.host }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Port</label>
+                                <input type="number" class="form-input" id="proxy-port" value="{{ proxy_config.port }}">
+                            </div>
                         </div>
-                        <div class="stat-box">
-                            <div class="stat-value success" id="stat-success">{{ submission_stats.success }}</div>
-                            <div class="stat-label">Success</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Username (Optional)</label>
+                                <input type="text" class="form-input" id="proxy-user" value="{{ proxy_config.username }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password (Optional)</label>
+                                <input type="password" class="form-input" id="proxy-pass" value="{{ proxy_config.password }}">
+                            </div>
                         </div>
-                        <div class="stat-box">
-                            <div class="stat-value failed" id="stat-failed">{{ submission_stats.failed }}</div>
-                            <div class="stat-label">Failed</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value challenge" id="stat-challenge">{{ submission_stats.challenge }}</div>
-                            <div class="stat-label">Challenge</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="success-rate" style="width: 0%"></div>
-                    </div>
-                    <div style="text-align: center; margin-top: 8px; color: var(--text-muted); font-size: 0.9em;">
-                        Success Rate: <span id="rate-percent">0</span>%
+                        <button class="btn btn-secondary" onclick="updateProxyConfig()" style="margin-top: 8px;">
+                            UPDATE PROXY
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Proxy Config -->
-            <div class="col-6">
-                <div class="card">
+                <!-- IP History -->
+                <div class="card" style="margin-top: 24px;">
                     <div class="card-header">
-                        <span class="card-title">🔐 Proxy Configuration</span>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Host</label>
-                        <input type="text" class="form-input" id="proxy-host" value="{{ proxy_host }}">
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 2fr 2fr; gap: 10px;">
-                        <div class="form-group">
-                            <label class="form-label">Port</label>
-                            <input type="number" class="form-input" id="proxy-port" value="{{ proxy_port }}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-input" id="proxy-user" value="{{ proxy_user }}" placeholder="optional">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-input" id="proxy-pass" value="{{ proxy_pass }}" placeholder="optional">
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary btn-block" onclick="updateProxyConfig()" style="margin-top: 15px;">
-                        💾 Update Proxy Config
-                    </button>
-                </div>
-            </div>
-
-            <!-- IP History -->
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">📜 Riwayat IP</span>
-                        <span style="color: var(--text-muted); font-size: 0.85em;">Last 15</span>
+                        <span class="card-title">IP History</span>
                     </div>
                     <div class="history-list" id="history-list">
                         {% for item in history %}
@@ -1034,73 +1238,132 @@ HTML_TEMPLATE = """
                             <span class="history-ip">{{ item.ip }}</span>
                             <div class="history-meta">
                                 <span class="history-count">#{{ item.count }}</span>
-                                <span>{{ item.city }}</span>
+                                <span class="history-city">{{ item.city }}</span>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="col-12">
-                <div class="card">
+                <!-- Quick Actions -->
+                <div class="card" style="margin-top: 24px;">
                     <div class="card-header">
-                        <span class="card-title">⚡ Quick Actions</span>
+                        <span class="card-title">Quick Actions</span>
                     </div>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button class="btn btn-success" onclick="exportConfig()">
-                            📥 Export Config
-                        </button>
-                        <button class="btn btn-secondary" onclick="importConfig()">
-                            📤 Import Config
-                        </button>
-                        <button class="btn btn-danger" onclick="clearHistory()">
-                            🗑️ Clear History
-                        </button>
-                        <button class="btn btn-secondary" onclick="testConnection()">
-                            🔍 Test Connection
-                        </button>
+                    <div class="card-body">
+                        <div class="actions-grid">
+                            <button class="btn btn-success" onclick="exportConfig()">EXPORT CONFIG</button>
+                            <button class="btn btn-secondary" onclick="importConfig()">IMPORT CONFIG</button>
+                            <button class="btn btn-secondary" onclick="testConnection()">TEST CONNECTION</button>
+                            <button class="btn btn-danger" onclick="clearHistory()">CLEAR HISTORY</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="footer">
-            ProxyDetection © 2024 | Indonesia-Focused Anti-Detection System
-        </div>
     </div>
 
-    <!-- Toast Notification -->
+    <footer>
+        ProxyDetection Dashboard | Indonesia-Focused Anti-Detection System
+    </footer>
+
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-        // Indonesian cities data from server
-        const CITIES = {{ cities_json | safe }};
+        // Data from server
+        const CITIES = {{ cities | tojson }};
+        const REGIONS = {{ regions | tojson }};
         const currentRegion = "{{ targeting.region }}";
+        const currentCity = "{{ targeting.city }}";
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadCitiesByRegion(currentRegion);
+            initRegionTabs();
+            initCityGrid(currentRegion);
         });
 
-        // Toast notification
-        function showToast(message, isError = false) {
+        // Toast
+        function showToast(message, type = '') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = 'toast' + (isError ? ' error' : '');
-            toast.classList.add('show');
+            toast.className = 'toast show ' + type;
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Region Tabs
+        function initRegionTabs() {
+            const container = document.getElementById('region-tabs');
+            const regionKeys = Object.keys(REGIONS);
+            const half = Math.ceil(regionKeys.length / 2);
+
+            let html = '';
+            regionKeys.forEach(key => {
+                const active = key === currentRegion ? 'active' : '';
+                html += `<button class="region-tab ${active}" onclick="selectRegion('${key}')">${REGIONS[key]}</button>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Select Region
+        function selectRegion(region) {
+            // Update active
+            document.querySelectorAll('.region-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Load cities
+            initCityGrid(region);
+
+            // Update targeting
+            updateTargetingField('region', region);
+        }
+
+        // City Grid
+        function initCityGrid(region) {
+            const container = document.getElementById('city-grid');
+            const cities = Object.entries(CITIES).filter(([key, city]) => city.region === region);
+
+            if (cities.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray-500); text-align: center; padding: 40px;">No cities available for this region</p>';
+                return;
+            }
+
+            let html = '';
+            cities.forEach(([key, city]) => {
+                const active = key === currentCity ? 'active' : '';
+                html += `
+                    <button class="city-btn ${active}" onclick="selectCity('${key}', '${region}')">
+                        <div class="city-name">${city.name}</div>
+                        <div class="city-tz">${city.timezone}</div>
+                    </button>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Select City
+        function selectCity(city, region) {
+            // Update active
+            document.querySelectorAll('.city-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Rotate IP with this city
+            rotateIP(city);
         }
 
         // Rotate IP
         async function rotateIP(city = null) {
-            const btn = document.querySelector('.btn-primary');
+            const btn = document.getElementById('rotate-btn');
             btn.disabled = true;
-            btn.innerHTML = '⏳ Memutar IP...';
+            btn.textContent = 'ROTATING...';
 
             try {
-                const response = await fetch('/api/rotate' + (city ? '?city=' + city : ''));
+                const url = city ? `/api/rotate?city=${city}` : '/api/rotate';
+                const response = await fetch(url);
                 const data = await response.json();
 
                 if (data.success) {
@@ -1108,26 +1371,25 @@ HTML_TEMPLATE = """
                     document.getElementById('request-count').textContent = data.request_count;
                     document.getElementById('city-name').textContent = data.targeting_city.name;
 
-                    // Update history
                     updateHistory(data.history);
 
-                    btn.innerHTML = '✅ IP BERHASIL DIGANTI!';
+                    btn.textContent = 'ROTATED';
                     setTimeout(() => {
                         btn.disabled = false;
-                        btn.innerHTML = '🔄 GANTI IP SEKARANG';
-                    }, 1500);
+                        btn.textContent = 'ROTATE IP';
+                    }, 1000);
                 }
             } catch (error) {
-                btn.innerHTML = '❌ GAGAL - COBA LAGI';
-                showToast('Gagal rotate IP: ' + error.message, true);
+                btn.textContent = 'ERROR';
+                showToast('Failed to rotate IP', 'error');
                 setTimeout(() => {
                     btn.disabled = false;
-                    btn.innerHTML = '🔄 GANTI IP SEKARANG';
+                    btn.textContent = 'ROTATE IP';
                 }, 2000);
             }
         }
 
-        // Update history list
+        // Update History
         function updateHistory(history) {
             const list = document.getElementById('history-list');
             list.innerHTML = history.map(item => `
@@ -1135,58 +1397,63 @@ HTML_TEMPLATE = """
                     <span class="history-ip">${item.ip}</span>
                     <div class="history-meta">
                         <span class="history-count">#${item.count}</span>
-                        <span>${item.city}</span>
+                        <span class="history-city">${item.city}</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Select region
-        function selectRegion(region) {
-            // Update active button
-            document.querySelectorAll('#region-grid .city-btn').forEach(btn => {
-                btn.classList.remove('active');
+        // Update Targeting
+        function updateTargetingField(key, value) {
+            fetch('/api/targeting', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [key]: value })
             });
-            event.target.closest('.city-btn').classList.add('active');
-
-            // Load cities for region
-            loadCitiesByRegion(region);
         }
 
-        // Load cities by region
-        function loadCitiesByRegion(region) {
-            const grid = document.getElementById('city-grid');
-            const citiesInRegion = Object.entries(CITIES)
-                .filter(([key, city]) => city.region === region);
-
-            grid.innerHTML = citiesInRegion.map(([key, city]) => `
-                <button class="city-btn" onclick="rotateIP('${key}')">
-                    <div class="city-name">📍 ${city.name}</div>
-                    <div class="city-region">${city.timezone}</div>
-                </button>
-            `).join('');
-        }
-
-        // Update targeting
         async function updateTargeting() {
-            const deviceType = document.getElementById('device-type').value;
-            const carrier = document.getElementById('carrier').value;
+            const data = {
+                region: document.getElementById('region-tabs')?.querySelector('.active')?.textContent,
+                device_type: document.getElementById('device-type').value,
+                browser: document.getElementById('browser').value,
+                carrier: document.getElementById('carrier').value || null,
+                isp: document.getElementById('isp').value || null,
+            };
 
             try {
                 await fetch('/api/targeting', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        device_type: deviceType,
-                        carrier: carrier || null
-                    })
+                    body: JSON.stringify(data)
                 });
             } catch (error) {
-                console.error('Failed to update targeting:', error);
+                console.error('Failed to update targeting');
             }
         }
 
-        // Toggle auto-rotate
+        // Batch Settings
+        async function updateBatchSettings() {
+            const data = {
+                interval_minutes: parseInt(document.getElementById('interval-minutes').value),
+                data_per_batch: parseInt(document.getElementById('data-per-batch').value),
+                max_per_hour: parseInt(document.getElementById('max-per-hour').value),
+                randomize_interval: document.getElementById('randomize-interval').checked,
+            };
+
+            try {
+                await fetch('/api/batch-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                showToast('Batch settings updated', 'success');
+            } catch (error) {
+                showToast('Failed to update settings', 'error');
+            }
+        }
+
+        // Auto Rotate
         async function toggleAutoRotate() {
             const enabled = document.getElementById('auto-rotate-toggle').checked;
 
@@ -1196,13 +1463,12 @@ HTML_TEMPLATE = """
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ enabled: enabled })
                 });
-                showToast(enabled ? 'Auto-rotate enabled' : 'Auto-rotate disabled');
+                showToast(enabled ? 'Auto-rotate enabled' : 'Auto-rotate disabled', 'success');
             } catch (error) {
-                showToast('Failed to update settings', true);
+                showToast('Failed to update', 'error');
             }
         }
 
-        // Update auto-rotate interval
         async function updateAutoRotateInterval() {
             const interval = parseInt(document.getElementById('rotate-interval').value);
 
@@ -1213,48 +1479,32 @@ HTML_TEMPLATE = """
                     body: JSON.stringify({ interval: interval })
                 });
             } catch (error) {
-                console.error('Failed to update interval:', error);
+                console.error('Failed to update interval');
             }
         }
 
-        // Update target URL
-        async function updateTargetURL() {
-            const url = document.getElementById('target-url').value;
-
-            try {
-                const response = await fetch('/api/target-url', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url })
-                });
-                showToast('Target URL updated!');
-            } catch (error) {
-                showToast('Failed to update URL', true);
-            }
-        }
-
-        // Update proxy config
+        // Proxy Config
         async function updateProxyConfig() {
-            const config = {
+            const data = {
                 host: document.getElementById('proxy-host').value,
                 port: parseInt(document.getElementById('proxy-port').value),
                 username: document.getElementById('proxy-user').value,
-                password: document.getElementById('proxy-pass').value
+                password: document.getElementById('proxy-pass').value,
             };
 
             try {
                 await fetch('/api/proxy-config', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(config)
+                    body: JSON.stringify(data)
                 });
-                showToast('Proxy configuration updated!');
+                showToast('Proxy configuration updated', 'success');
             } catch (error) {
-                showToast('Failed to update proxy config', true);
+                showToast('Failed to update proxy', 'error');
             }
         }
 
-        // Export config
+        // Export/Import
         function exportConfig() {
             fetch('/api/status')
                 .then(r => r.json())
@@ -1265,11 +1515,10 @@ HTML_TEMPLATE = """
                     a.href = url;
                     a.download = 'proxy-dashboard-config.json';
                     a.click();
-                    showToast('Configuration exported!');
+                    showToast('Configuration exported', 'success');
                 });
         }
 
-        // Import config
         async function importConfig() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -1280,39 +1529,29 @@ HTML_TEMPLATE = """
                     const text = await file.text();
                     try {
                         const config = JSON.parse(text);
-                        // Apply config
-                        if (config.targeting) {
-                            document.getElementById('device-type').value = config.targeting.device_type || 'desktop';
-                            document.getElementById('carrier').value = config.targeting.carrier || '';
-                        }
-                        if (config.proxy_url) {
-                            // Parse proxy URL
-                        }
-                        showToast('Configuration imported!');
+                        showToast('Configuration imported - Reloading...', 'success');
+                        setTimeout(() => location.reload(), 1000);
                     } catch (err) {
-                        showToast('Invalid configuration file', true);
+                        showToast('Invalid configuration file', 'error');
                     }
                 }
             };
             input.click();
         }
 
-        // Clear history
-        async function clearHistory() {
-            if (confirm('Clear all IP history?')) {
-                showToast('History cleared');
-            }
+        function testConnection() {
+            showToast('Testing connection...');
+            fetch('/api/test-connection')
+                .then(r => r.json())
+                .then(data => {
+                    showToast(data.success ? 'Connection successful' : 'Connection failed', data.success ? 'success' : 'error');
+                })
+                .catch(() => showToast('Connection test failed', 'error'));
         }
 
-        // Test connection
-        async function testConnection() {
-            showToast('Testing connection...');
-            try {
-                const response = await fetch('/api/test-connection');
-                const data = await response.json();
-                showToast(data.success ? '✅ Connection successful!' : '❌ Connection failed');
-            } catch (error) {
-                showToast('Connection test failed', true);
+        function clearHistory() {
+            if (confirm('Clear all IP history?')) {
+                showToast('History cleared', 'success');
             }
         }
 
@@ -1323,18 +1562,9 @@ HTML_TEMPLATE = """
                 const data = await response.json();
                 document.getElementById('current-ip').textContent = data.current_ip;
                 document.getElementById('request-count').textContent = data.request_count;
-
-                // Update stats
-                const stats = data.submission_stats;
-                document.getElementById('stat-total').textContent = stats.total;
-                document.getElementById('stat-success').textContent = stats.success;
-                document.getElementById('stat-failed').textContent = stats.failed;
-                document.getElementById('stat-challenge').textContent = stats.challenge;
-
-                // Update success rate
-                const rate = stats.total > 0 ? (stats.success / stats.total * 100).toFixed(1) : 0;
-                document.getElementById('rate-percent').textContent = rate;
-                document.getElementById('success-rate').style.width = rate + '%';
+                document.getElementById('stat-success').textContent = data.submission_stats.success;
+                document.getElementById('stat-failed').textContent = data.submission_stats.failed;
+                document.getElementById('stat-pending').textContent = data.submission_stats.challenge;
             } catch (error) {
                 console.log('Auto refresh failed');
             }
@@ -1356,25 +1586,25 @@ def index():
         HTML_TEMPLATE,
         current_ip=status['current_ip'],
         request_count=status['request_count'],
-        last_time=status['last_rotation'] or '-',
-        proxy_host=status['proxy_host'],
-        proxy_port=status['proxy_port'],
-        proxy_user=status['proxy_user'],
-        proxy_pass='•' * 8 if status['proxy_pass'] else '',
+        proxy_config=status['proxy_config'],
         targeting=status['targeting'],
         targeting_city=status['targeting_city'],
+        batch_settings=status['batch_settings'],
         submission_stats=status['submission_stats'],
         auto_rotate=status['auto_rotate'],
         target_url=status['target_url'],
         history=status['history'],
-        cities_json=json.dumps(INDONESIAN_CITIES),
+        regions=REGIONS,
+        cities=INDONESIAN_CITIES,
+        carriers=MOBILE_CARRIERS,
+        isps=ISP_PROVIDERS,
     )
 
 @app.route('/api/rotate')
 @app.route('/api/rotate/<city>')
 def api_rotate(city=None):
     """Rotate IP with optional city targeting."""
-    new_ip = state.rotate(city)
+    new_ip = state.rotate(city=city)
     status = state.get_status()
 
     return jsonify({
@@ -1399,6 +1629,13 @@ def api_targeting():
     targeting = state.update_targeting(data)
     return jsonify({'success': True, 'targeting': targeting})
 
+@app.route('/api/batch-settings', methods=['POST'])
+def api_batch_settings():
+    """Update batch settings."""
+    data = request.get_json()
+    settings = state.update_batch_settings(data)
+    return jsonify({'success': True, 'settings': settings})
+
 @app.route('/api/proxy-config', methods=['POST'])
 def api_proxy_config():
     """Update proxy configuration."""
@@ -1420,17 +1657,9 @@ def api_target_url():
     url = state.update_target_url(data.get('url', ''))
     return jsonify({'success': True, 'url': url})
 
-@app.route('/api/submission-stats', methods=['POST'])
-def api_submission_stats():
-    """Update submission statistics."""
-    data = request.get_json()
-    stats = state.update_submission_stats(data)
-    return jsonify({'success': True, 'stats': stats})
-
 @app.route('/api/test-connection')
 def api_test_connection():
     """Test proxy connection."""
-    # Simulate connection test
     import random
     success = random.random() > 0.2
     return jsonify({
@@ -1447,27 +1676,26 @@ if __name__ == '__main__':
     print("""
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   🎯 Proxy & Lead Dashboard - Indonesia Focus             ║
+║   Proxy Detection Dashboard - Indonesia Focus             ║
 ║                                                           ║
 ║   Opening browser at: http://localhost:5000               ║
 ║                                                           ║
 ║   Features:                                               ║
-║   • 20+ Indonesian cities targeting                       ║
-║   • Region-based selection (Jabodetabek, Jawa, dll)       ║
-║   • Mobile carrier selection                              ║
-║   • Auto-rotate settings                                  ║
-║   • Real-time statistics                                  ║
+║   - 100+ Indonesian cities targeting                      ║
+║   - Region-based selection (27 regions)                   ║
+║   - Device type & browser selection                       ║
+║   - Batch settings (interval, data per batch)            ║
+║   - Mobile carrier & ISP selection                        ║
+║   - Auto-rotate settings                                  ║
 ║                                                           ║
-║   Tekan Ctrl+C untuk stop                                 ║
+║   Press Ctrl+C to stop                                    ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
     """)
 
-    # Open browser automatically
     import webbrowser
     import time
     time.sleep(1)
     webbrowser.open('http://localhost:5000')
 
-    # Run Flask
     app.run(host='0.0.0.0', port=5000, debug=False)
