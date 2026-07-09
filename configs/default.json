@@ -1,0 +1,37 @@
+# Default config
+
+{
+    "browser": {
+        "type": "camoufox",
+        "headless": false,
+        "window_width": 1920,
+        "window_height": 1080,
+        "stealth": {
+            "enabled": true,
+            "randomize_canvas": true,
+            "randomize_webgl": true,
+            "randomize_audio": true,
+            "mask_webdriver": true
+        }
+    },
+    "submission": {
+        "default_delay": 5,
+        "max_parallel": 3,
+        "max_retries": 3,
+        "retry_delay": 30,
+        "timeout": 120,
+        "stop_on_challenge": true,
+        "stop_on_detection": true
+    },
+    "proxy": {
+        "default_strategy": "random",
+        "health_check_interval": 300,
+        "min_success_rate": 0.5
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "logs/app.log",
+        "rotation": "10 MB",
+        "retention": "7 days"
+    }
+}

@@ -1,0 +1,9 @@
+# Sample leads data
+# Replace with your actual leads
+
+id,name,email,phone,age,country,city,state,zip_code
+lead-001,John Doe,john.doe@example.com,+1-555-123-4567,30,US,New York,NY,10001
+lead-002,Jane Smith,jane.smith@example.com,+1-555-234-5678,25,US,Los Angeles,CA,90001
+lead-003,Bob Wilson,bob.wilson@example.com,+44-20-7946-0958,35,GB,London,LND,SW1A 1AA
+lead-004,Marie Dubois,marie.dubois@example.com,+33-1-23-45-67-89,28,FR,Paris,IDF,75001
+lead-005,Tanaka Hiroshi,tanaka.hiroshi@example.com,+81-3-1234-5678,32,JP,Tokyo,13,100-0001
