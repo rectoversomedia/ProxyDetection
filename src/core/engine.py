@@ -9,9 +9,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-from ..utils.logger import get_logger
+from loguru import logger
+
 from ..utils.config import get_settings
 from ..utils.screenshot import save_screenshot
+from ..utils.retry import async_retry_with_backoff
 
 from ..antidetect.fingerprint import FingerprintGenerator
 from ..antidetect.profile import BrowserProfile, ProfileManager
@@ -27,8 +29,6 @@ from .exceptions import (
     TimeoutError,
 )
 
-logger = get_logger(__name__)
-
 
 @dataclass
 class SubmissionResult:
@@ -43,6 +43,7 @@ class SubmissionResult:
     retry_count: int = 0
     duration_seconds: float = 0
     timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -56,6 +57,7 @@ class SubmissionResult:
             "retry_count": self.retry_count,
             "duration_seconds": self.duration_seconds,
             "timestamp": self.timestamp,
+            "metadata": self.metadata,
         }
 
 
@@ -77,10 +79,33 @@ class SubmissionConfig:
     validate_before_submit: bool = True
 
     # Selector mappings (customizable per target)
-    form_selectors: Dict[str, str] = field(default_factory=lambda: {})
+    form_selectors: Dict[str, str] = field(default_factory=lambda: {
+        "name": 'input[name="name"]',
+        "first_name": 'input[name="first_name"]',
+        "last_name": 'input[name="last_name"]',
+        "email": 'input[name="email"]',
+        "phone": 'input[name="phone"]',
+        "age": 'input[name="age"]',
+        "city": 'input[name="city"]',
+        "state": 'input[name="state"]',
+        "zip_code": 'input[name="zip"]',
+        "country": 'select[name="country"]',
+        "submit": 'button[type="submit"]',
+    })
 
     # Custom submit script
     submit_script: Optional[Callable] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary."""
+        return {
+            "target_url": self.target_url,
+            "parallel": self.parallel,
+            "delay_between": self.delay_between,
+            "max_retries": self.max_retries,
+            "headless": self.headless,
+            "stop_on_challenge": self.stop_on_challenge,
+        }
 
 
 class LeadSubmissionEngine:
@@ -102,15 +127,7 @@ class LeadSubmissionEngine:
         session_manager: Optional[SessionManager] = None,
         lead_manager: Optional[LeadManager] = None,
     ):
-        """
-        Initialize the submission engine.
-
-        Args:
-            config: Submission configuration
-            proxy_rotator: Proxy rotator instance
-            session_manager: Session manager instance
-            lead_manager: Lead manager instance
-        """
+        """Initialize the submission engine."""
         self.config = config
         self.settings = get_settings()
 
@@ -124,6 +141,16 @@ class LeadSubmissionEngine:
 
         self._running = False
         self._current_session: Optional[Session] = None
+        self._current_proxy: Optional[ProxyConfig] = None
+
+        # Progress tracking
+        self._progress = {
+            "total": 0,
+            "completed": 0,
+            "success": 0,
+            "failed": 0,
+            "challenges": 0,
+        }
 
         logger.info("LeadSubmissionEngine initialized")
 
@@ -150,17 +177,26 @@ class LeadSubmissionEngine:
 
         lead_id = lead_data.get("id", str(datetime.utcnow().timestamp()))
         retry_count = 0
+        proxy = None
 
         while retry_count <= cfg.max_retries:
             try:
                 # Get proxy
-                proxy = await self.proxy_rotator.get_proxy()
+                proxy = await self.proxy_rotator.get_proxy(
+                    country=lead_data.get("country")
+                )
+
                 if not proxy:
                     return SubmissionResult(
                         lead_id=lead_id,
                         success=False,
                         message="No proxy available",
+                        retry_count=retry_count,
+                        duration_seconds=time.time() - start_time,
                     )
+
+                self._current_proxy = proxy
+                logger.debug(f"Using proxy: {proxy.host}:{proxy.port}")
 
                 # Generate fingerprint
                 fingerprint = self.fingerprint_gen.generate(
@@ -172,21 +208,18 @@ class LeadSubmissionEngine:
                     proxy_host=proxy.host,
                     proxy_country=proxy.country,
                     fingerprint_id=fingerprint.id,
+                    metadata={
+                        "lead_id": lead_id,
+                        "browser": cfg.headless and "headless" or "normal",
+                    }
                 )
                 self._current_session = session
 
                 # Build browser config
-                browser_config = BrowserConfig(
+                browser_config = self._build_browser_config(
                     fingerprint=fingerprint,
-                    proxy_host=proxy.host,
-                    proxy_port=proxy.port,
-                    proxy_username=proxy.username,
-                    proxy_password=proxy.password,
+                    proxy=proxy,
                     headless=cfg.headless,
-                    window_width=fingerprint.screen_width,
-                    window_height=fingerprint.screen_height,
-                    use_stealth=True,
-                    behavioral_simulator=True,
                 )
 
                 # Launch browser
@@ -194,17 +227,22 @@ class LeadSubmissionEngine:
 
                 try:
                     # Navigate to target
+                    logger.debug(f"Navigating to {cfg.target_url}")
                     await browser.goto(cfg.target_url)
-                    await asyncio.sleep(2)  # Wait for page load
+
+                    # Wait for page to stabilize
+                    await asyncio.sleep(2)
 
                     # Check for challenges
                     challenge = await browser.check_for_challenge()
                     if challenge["has_challenge"]:
-                        screenshot = await save_screenshot(
-                            browser.get_page(),
-                            f"challenge_{lead_id}",
-                            cfg.screenshot_dir,
-                        )
+                        screenshot = None
+                        if cfg.save_screenshots:
+                            screenshot = await save_screenshot(
+                                browser.get_page(),
+                                f"challenge_{lead_id}",
+                                cfg.screenshot_dir,
+                            )
 
                         if cfg.stop_on_challenge:
                             raise ChallengeDetectedError(
@@ -218,7 +256,7 @@ class LeadSubmissionEngine:
                     else:
                         await self._submit_form(browser, lead_data, cfg)
 
-                    # Take success screenshot
+                    # Success!
                     screenshot = None
                     if cfg.save_screenshots:
                         screenshot = await save_screenshot(
@@ -230,8 +268,12 @@ class LeadSubmissionEngine:
                     # Record success
                     session.record_success()
                     self.proxy_rotator.record_success(proxy)
+                    self._progress["success"] += 1
 
                     duration = time.time() - start_time
+                    self._progress["completed"] += 1
+
+                    logger.info(f"Successfully submitted lead {lead_id} in {duration:.2f}s")
 
                     return SubmissionResult(
                         lead_id=lead_id,
@@ -240,13 +282,22 @@ class LeadSubmissionEngine:
                         session_id=session.id,
                         screenshot_path=screenshot,
                         duration_seconds=duration,
+                        metadata={
+                            "proxy": proxy.host,
+                            "country": proxy.country,
+                        }
                     )
 
                 finally:
                     await browser.close()
 
             except ChallengeDetectedError as e:
+                logger.warning(f"Challenge detected for lead {lead_id}: {e.challenge_type}")
+                self._progress["challenges"] += 1
+
                 duration = time.time() - start_time
+                self._progress["completed"] += 1
+
                 return SubmissionResult(
                     lead_id=lead_id,
                     success=False,
@@ -257,28 +308,76 @@ class LeadSubmissionEngine:
                     duration_seconds=duration,
                 )
 
-            except Exception as e:
-                logger.error(f"Submission error for {lead_id}: {e}")
+            except asyncio.TimeoutError:
+                logger.error(f"Timeout for lead {lead_id}")
                 retry_count += 1
-
-                if self._current_session:
-                    self._current_session.record_failure()
-                if proxy:
-                    self.proxy_rotator.record_failure(proxy)
+                duration = time.time() - start_time
 
                 if retry_count <= cfg.max_retries:
-                    logger.info(f"Retrying in {cfg.retry_delay}s...")
+                    logger.info(f"Retrying lead {lead_id} in {cfg.retry_delay}s...")
                     await asyncio.sleep(cfg.retry_delay)
+                else:
+                    self._record_failure(session, proxy)
+                    return SubmissionResult(
+                        lead_id=lead_id,
+                        success=False,
+                        message=f"Timeout after {cfg.max_retries} retries",
+                        session_id=self._current_session.id if self._current_session else None,
+                        retry_count=retry_count,
+                        duration_seconds=duration,
+                    )
 
-        # All retries exhausted
+            except Exception as e:
+                logger.error(f"Submission error for {lead_id}: {type(e).__name__}: {e}")
+                retry_count += 1
+
+                self._record_failure(session, proxy)
+
+                if retry_count <= cfg.max_retries:
+                    logger.info(f"Retrying lead {lead_id} in {cfg.retry_delay}s...")
+                    await asyncio.sleep(cfg.retry_delay)
+                else:
+                    duration = time.time() - start_time
+                    self._progress["failed"] += 1
+                    self._progress["completed"] += 1
+
+                    return SubmissionResult(
+                        lead_id=lead_id,
+                        success=False,
+                        message=f"Failed after {cfg.max_retries} retries: {str(e)}",
+                        session_id=self._current_session.id if self._current_session else None,
+                        retry_count=retry_count,
+                        duration_seconds=duration,
+                    )
+
+        # Final failure
         duration = time.time() - start_time
         return SubmissionResult(
             lead_id=lead_id,
             success=False,
             message=f"Failed after {cfg.max_retries} retries",
-            session_id=self._current_session.id if self._current_session else None,
             retry_count=retry_count,
             duration_seconds=duration,
+        )
+
+    def _build_browser_config(
+        self,
+        fingerprint,
+        proxy: ProxyConfig,
+        headless: bool = False,
+    ) -> BrowserConfig:
+        """Build browser configuration from fingerprint and proxy."""
+        return BrowserConfig(
+            fingerprint=fingerprint,
+            proxy_host=proxy.host,
+            proxy_port=proxy.port,
+            proxy_username=proxy.username,
+            proxy_password=proxy.password,
+            headless=headless,
+            window_width=fingerprint.screen_width,
+            window_height=fingerprint.screen_height,
+            use_stealth=True,
+            behavioral_simulator=True,
         )
 
     async def _submit_form(
@@ -287,34 +386,16 @@ class LeadSubmissionEngine:
         lead_data: Dict[str, Any],
         config: SubmissionConfig,
     ) -> None:
-        """
-        Submit form with lead data.
-
-        Override this method for custom form handling.
-
-        Args:
-            browser: Browser instance
-            lead_data: Lead data
-            config: Submission config
-        """
+        """Submit form with lead data."""
         page = browser.get_page()
 
         # Map lead fields to form selectors
-        field_mappings = config.form_selectors or {
-            "name": 'input[name="name"]',
-            "first_name": 'input[name="first_name"]',
-            "last_name": 'input[name="last_name"]',
-            "email": 'input[name="email"]',
-            "phone": 'input[name="phone"]',
-            "age": 'input[name="age"]',
-            "city": 'input[name="city"]',
-            "state": 'input[name="state"]',
-            "zip_code": 'input[name="zip"]',
-            "country": 'select[name="country"]',
-            "submit": 'button[type="submit"]',
-        }
+        field_mappings = config.form_selectors
 
-        # Fill form fields
+        # Get behavioral simulator
+        behavior = BehavioralSimulator()
+
+        # Fill form fields with human-like behavior
         for field_name, selector in field_mappings.items():
             if field_name == "submit":
                 continue
@@ -322,22 +403,65 @@ class LeadSubmissionEngine:
             value = lead_data.get(field_name)
             if value:
                 try:
-                    # Check if it's a select
+                    # Check if selector exists
+                    element = await page.query_selector(selector)
+                    if not element:
+                        logger.debug(f"Selector not found: {selector}")
+                        continue
+
+                    # Get element position for human-like movement
+                    box = await element.bounding_box()
+                    if box:
+                        # Move mouse to element
+                        cx = box["x"] + box["width"] / 2
+                        cy = box["y"] + box["height"] / 2
+                        await behavior.move_mouse(browser, (cx - 50, cy - 50), (cx, cy))
+
+                    # Clear existing value
+                    await element.click()
+
+                    # Type with human-like behavior
                     if "select" in selector.lower():
                         await browser.select_option(selector, str(value))
                     else:
-                        await browser.fill(selector, str(value))
+                        await behavior.type_with_log_normal(browser, str(value))
 
-                    await asyncio.sleep(0.1)  # Small delay between fields
+                    # Small random delay
+                    await asyncio.sleep(0.1)
 
                 except Exception as e:
                     logger.debug(f"Could not fill {field_name}: {e}")
 
-        # Submit
+        # Submit form
         submit_selector = field_mappings.get("submit")
         if submit_selector:
-            await browser.click(submit_selector)
-            await asyncio.sleep(2)  # Wait for submission
+            try:
+                element = await page.query_selector(submit_selector)
+                if element:
+                    box = await element.bounding_box()
+                    if box:
+                        cx = box["x"] + box["width"] / 2
+                        cy = box["y"] + box["height"] / 2
+                        await behavior.move_mouse(browser, (cx - 20, cy - 20), (cx, cy))
+                        await asyncio.sleep(0.1)
+                        await behavior.click(browser, cx, cy)
+
+                await asyncio.sleep(2)  # Wait for submission
+            except Exception as e:
+                logger.debug(f"Could not submit: {e}")
+
+    def _record_failure(
+        self,
+        session: Optional[Session],
+        proxy: Optional[ProxyConfig],
+    ) -> None:
+        """Record a failed submission."""
+        if session:
+            session.record_failure()
+        if proxy:
+            self.proxy_rotator.record_failure(proxy)
+        self._progress["failed"] += 1
+        self._progress["completed"] += 1
 
     async def submit_batch(
         self,
@@ -345,23 +469,15 @@ class LeadSubmissionEngine:
         config: Optional[SubmissionConfig] = None,
         progress_callback: Optional[Callable[[int, int, SubmissionResult], None]] = None,
     ) -> List[SubmissionResult]:
-        """
-        Submit multiple leads.
-
-        Args:
-            leads: List of lead data dictionaries
-            config: Submission configuration
-            progress_callback: Callback for progress updates
-
-        Returns:
-            List of SubmissionResult
-        """
+        """Submit multiple leads."""
         cfg = config or self.config
         if not cfg:
             raise ValueError("No submission config provided")
 
         results = []
         total = len(leads)
+        self._progress["total"] = total
+        self._running = True
 
         logger.info(f"Starting batch submission of {total} leads")
 
@@ -370,7 +486,8 @@ class LeadSubmissionEngine:
                 logger.info("Submission stopped by user")
                 break
 
-            logger.info(f"Submitting lead {i + 1}/{total}: {lead_data.get('id', 'unknown')}")
+            lead_id = lead_data.get("id", f"lead_{i}")
+            logger.info(f"Submitting lead {i + 1}/{total}: {lead_id}")
 
             result = await self.submit_lead(lead_data, config)
             results.append(result)
@@ -379,7 +496,7 @@ class LeadSubmissionEngine:
                 progress_callback(i + 1, total, result)
 
             # Delay between submissions
-            if i < total - 1 and cfg.delay_between > 0:
+            if i < total - 1 and cfg.delay_between > 0 and self._running:
                 logger.debug(f"Waiting {cfg.delay_between}s before next submission...")
                 await asyncio.sleep(cfg.delay_between)
 
@@ -391,9 +508,12 @@ class LeadSubmissionEngine:
         # Summary
         success_count = sum(1 for r in results if r.success)
         fail_count = len(results) - success_count
+        challenge_count = sum(1 for r in results if r.challenge_type)
 
         logger.info(
-            f"Batch submission complete: {success_count} success, {fail_count} failed "
+            f"Batch submission complete: "
+            f"{success_count} success, {fail_count} failed, "
+            f"{challenge_count} challenges "
             f"({success_count / len(results) * 100:.1f}% success rate)"
         )
 
@@ -404,16 +524,7 @@ class LeadSubmissionEngine:
         filepath: str,
         config: Optional[SubmissionConfig] = None,
     ) -> List[SubmissionResult]:
-        """
-        Submit leads from a file.
-
-        Args:
-            filepath: Path to leads file
-            config: Submission configuration
-
-        Returns:
-            List of SubmissionResult
-        """
+        """Submit leads from a file."""
         from ..leads.parser import LeadParser
 
         parser = LeadParser()
@@ -431,6 +542,15 @@ class LeadSubmissionEngine:
         self._running = False
         logger.info("Submission engine stopped")
 
+    def get_progress(self) -> Dict[str, Any]:
+        """Get current progress."""
+        progress = self._progress.copy()
+        if progress["total"] > 0:
+            progress["percent"] = progress["completed"] / progress["total"] * 100
+        else:
+            progress["percent"] = 0
+        return progress
+
     async def get_stats(self) -> Dict[str, Any]:
         """Get submission statistics."""
         session_stats = await self.session_manager.get_session_stats()
@@ -439,6 +559,7 @@ class LeadSubmissionEngine:
         return {
             "sessions": session_stats,
             "proxies": proxy_stats,
+            "progress": self.get_progress(),
             "engine_status": "running" if self._running else "stopped",
         }
 

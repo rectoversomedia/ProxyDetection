@@ -1,0 +1,28 @@
+{
+    "name": "prulady_insurance",
+    "description": "Prulady Insurance Lead Form Template",
+    "target_url": "https://example.com/lead-form",
+    "template": "insurance",
+    "form_selectors": {
+        "first_name": "input[name='firstName']",
+        "last_name": "input[name='lastName']",
+        "email": "input[name='email']",
+        "phone": "input[name='phone']",
+        "age": "input[name='age']",
+        "gender": "select[name='gender']",
+        "state": "select[name='state']",
+        "zip_code": "input[name='zipCode']",
+        "submit": "button[type='submit']"
+    },
+    "success_selectors": [
+        ".success-message",
+        ".thank-you",
+        "[data-qa='success']"
+    ],
+    "settings": {
+        "delay_before_submit": 1.0,
+        "delay_after_submit": 3.0,
+        "wait_for_element": "form.lead-form",
+        "check_captcha": true
+    }
+}

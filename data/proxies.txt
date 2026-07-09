@@ -1,0 +1,22 @@
+DAT_IMPULSE_API_KEY=your_dat_impulse_api_key_here
+DECODO_API_KEY=your_decodo_api_key_here
+
+# Browser Settings
+BROWSER_TYPE=camoufox
+BROWSER_HEADLESS=false
+
+# Submission Settings
+DEFAULT_DELAY=5
+MAX_PARALLEL=3
+MAX_RETRIES=3
+
+# Database
+DATABASE_PATH=data/proxy_detection.db
+
+# Logging
+LOG_LEVEL=INFO
+LOG_FILE=logs/app.log
+
+# Screenshots
+SAVE_ERROR_SCREENSHOTS=true
+SCREENSHOT_DIR=logs/screenshots
