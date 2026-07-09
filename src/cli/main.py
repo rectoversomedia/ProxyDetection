@@ -16,6 +16,7 @@ from .commands.config import config_app
 from .commands.proxy import proxy_app
 from .commands.leads import leads_app
 from .commands.profile import profile_app
+from .commands.campaign import campaign_app
 
 console = Console()
 
@@ -33,6 +34,7 @@ app.add_typer(config_app, name="config")
 app.add_typer(proxy_app, name="proxy")
 app.add_typer(leads_app, name="leads")
 app.add_typer(profile_app, name="profile")
+app.add_typer(campaign_app, name="campaign")
 
 
 @app.callback(invoke_without_command=True)

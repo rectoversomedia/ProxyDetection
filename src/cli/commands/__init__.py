@@ -5,6 +5,7 @@ from .config import config_app
 from .proxy import proxy_app
 from .leads import leads_app
 from .profile import profile_app
+from .campaign import campaign_app
 
 __all__ = [
     "submit_app",
@@ -12,4 +13,5 @@ __all__ = [
     "proxy_app",
     "leads_app",
     "profile_app",
+    "campaign_app",
 ]
