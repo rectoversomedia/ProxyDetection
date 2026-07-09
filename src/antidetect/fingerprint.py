@@ -21,32 +21,302 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-# Country to timezone mapping
+# =============================================================================
+# INDONESIA-FOCUSED FINGERPRINT CONFIGURATION
+# =============================================================================
+
+# Country to timezone mapping (EXPANDED for Indonesia)
 COUNTRY_TIMEZONES: Dict[str, List[str]] = {
-    "US": ["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles"],
-    "GB": ["Europe/London"],
-    "DE": ["Europe/Berlin", "Europe/Paris"],
-    "FR": ["Europe/Paris"],
-    "JP": ["Asia/Tokyo"],
-    "AU": ["Australia/Sydney", "Australia/Melbourne"],
-    "CA": ["America/Toronto", "America/Vancouver"],
-    "SG": ["Asia/Singapore"],
+    # Indonesia - Multiple cities for geo-targeting
+    "ID": [
+        "Asia/Jakarta",      # WIB (UTC+7)
+        "Asia/Jakarta",      # Jakarta
+        "Asia/Makassar",     # WITA (UTC+8) - Makassar, Denpasar
+        "Asia/Jayapura",     # WIT (UTC+9) - Papua
+        "Asia/Pontianak",    # WIB (UTC+7) - Kalimantan
+        "Asia/Bangkok",      # Alternative for mixed SE Asia
+    ],
+    # Indonesia Province Targeting
+    "ID-JK": ["Asia/Jakarta"],      # DKI Jakarta
+    "ID-JB": ["Asia/Jakarta"],      # Jawa Barat
+    "ID-JT": ["Asia/Jakarta"],      # Jawa Tengah
+    "ID-JI": ["Asia/Jakarta"],      # Jawa Timur
+    "ID-BT": ["Asia/Jakarta"],      # Banten
+    "ID-DKI": ["Asia/Jakarta"],     # Jakarta
+    "ID-SU": ["Asia/Jakarta"],      # Sumatera Utara (displays as WIB)
+    "ID-SS": ["Asia/Jakarta"],      # Sumatera Selatan
+    "ID-SB": ["Asia/Makassar"],    # Sumatera Barat (WIB but different ISP patterns)
+    "ID-CA": ["Asia/Makassar"],     # Kalimantan
+    "ID-KT": ["Asia/Makassar"],     # Kalimantan Tengah
+    "ID-KI": ["Asia/Makassar"],     # Kalimantan Timur
+    "ID-SA": ["Asia/Makassar"],     # Sulawesi
+    "ID-BA": ["Asia/Makassar"],     # Bali (WITA)
+    "ID-NT": ["Asia/Makassar"],     # Nusa Tenggara
+    "ID-MA": ["Asia/Jayapura"],     # Maluku
+    "ID-PP": ["Asia/Jayapura"],     # Papua
+    # ASEAN neighbors (for mixed traffic)
     "MY": ["Asia/Kuala_Lumpur"],
-    "ID": ["Asia/Jakarta"],
+    "SG": ["Asia/Singapore"],
     "TH": ["Asia/Bangkok"],
     "VN": ["Asia/Ho_Chi_Minh"],
     "PH": ["Asia/Manila"],
-    "IN": ["Asia/Kolkata"],
-    "BR": ["America/Sao_Paulo"],
-    "MX": ["America/Mexico_City"],
-    "ES": ["Europe/Madrid"],
-    "IT": ["Europe/Rome"],
-    "NL": ["Europe/Amsterdam"],
-    "RU": ["Europe/Moscow"],
-    "KR": ["Asia/Seoul"],
-    "CN": ["Asia/Shanghai"],
-    "NZ": ["Pacific/Auckland"],
-    "ZA": ["Africa/Johannesburg"],
+    # Global (kept for reference, deprioritized)
+    "US": ["America/New_York"],
+    "GB": ["Europe/London"],
+    "DE": ["Europe/Berlin"],
+    "JP": ["Asia/Tokyo"],
+    "AU": ["Australia/Sydney"],
+}
+
+# Indonesian Cities for geo-targeting
+INDONESIAN_CITIES: Dict[str, Dict[str, Any]] = {
+    "jakarta": {
+        "name": "Jakarta",
+        "province": "DKI Jakarta",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,  # UTC+7 in seconds
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "biznet", "myrepublic", "indosat", "xl", "three", "firstmedia", "cbn"],
+    },
+    "bandung": {
+        "name": "Bandung",
+        "province": "Jawa Barat",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "ceria", "cotome", "myrepublic"],
+    },
+    "surabaya": {
+        "name": "Surabaya",
+        "province": "Jawa Timur",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "myspeed", "jagoanhosting"],
+    },
+    "semarang": {
+        "name": "Semarang",
+        "province": "Jawa Tengah",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "starwifi"],
+    },
+    "yogyakarta": {
+        "name": "Yogyakarta",
+        "province": "DI Yogyakarta",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "fastnet"],
+    },
+    "medan": {
+        "name": "Medan",
+        "province": "Sumatera Utara",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "executable", "orbit"],
+    },
+    "makassar": {
+        "name": "Makassar",
+        "province": "Sulawesi Selatan",
+        "timezone": "Asia/Makassar",
+        "tz_offset": 28800,  # UTC+8
+        "tz_offset_minutes": 480,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "citranet"],
+    },
+    "denpasar": {
+        "name": "Denpasar",
+        "province": "Bali",
+        "timezone": "Asia/Makassar",
+        "tz_offset": 28800,
+        "tz_offset_minutes": 480,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "baliwifi", "bosnet"],
+    },
+    "manado": {
+        "name": "Manado",
+        "province": "Sulawesi Utara",
+        "timezone": "Asia/Makassar",
+        "tz_offset": 28800,
+        "tz_offset_minutes": 480,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "sorong"],
+    },
+    "jayapura": {
+        "name": "Jayapura",
+        "province": "Papua",
+        "timezone": "Asia/Jayapura",
+        "tz_offset": 32400,  # UTC+9
+        "tz_offset_minutes": 540,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom"],
+    },
+    "palembang": {
+        "name": "Palembang",
+        "province": "Sumatera Selatan",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "palcom"],
+    },
+    "tangerang": {
+        "name": "Tangerang",
+        "province": "Banten",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "cbn", "biznet", "indosat"],
+    },
+    "bekasi": {
+        "name": "Bekasi",
+        "province": "Jawa Barat",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "firstmedia", "indosat"],
+    },
+    "depok": {
+        "name": "Depok",
+        "province": "Jawa Barat",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "cbn"],
+    },
+    "bogor": {
+        "name": "Bogor",
+        "province": "Jawa Barat",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "iconpln"],
+    },
+    "solo": {
+        "name": "Surakarta",
+        "province": "Jawa Tengah",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "sura"],
+    },
+    "malang": {
+        "name": "Malang",
+        "province": "Jawa Timur",
+        "timezone": "Asia/Jakarta",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom", "polinema"],
+    },
+    "pontianak": {
+        "name": "Pontianak",
+        "province": "Kalimantan Barat",
+        "timezone": "Asia/Pontianak",
+        "tz_offset": 25200,
+        "tz_offset_minutes": 420,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom"],
+    },
+    "samarinda": {
+        "name": "Samarinda",
+        "province": "Kalimantan Timur",
+        "timezone": "Asia/Makassar",
+        "tz_offset": 28800,
+        "tz_offset_minutes": 480,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom"],
+    },
+    "banjarmasin": {
+        "name": "Banjarmasin",
+        "province": "Kalimantan Selatan",
+        "timezone": "Asia/Makassar",
+        "tz_offset": 28800,
+        "tz_offset_minutes": 480,
+        "locale": "id-ID",
+        "isp_patterns": ["telkom"],
+    },
+}
+
+# Indonesian Mobile Carriers
+INDONESIAN_MOBILE_CARRIERS: Dict[str, Dict[str, Any]] = {
+    "telkomsel": {
+        "name": "Telkomsel",
+        "prefixes": ["812", "813", "852", "855", "857", "858", "859"],
+        "apn": "internet",
+    },
+    "indosat": {
+        "name": "Indosat Ooredoo",
+        "prefixes": ["814", "815", "816", "855", "856"],
+        "apn": "indosatgprs",
+    },
+    "xl": {
+        "name": "XL Axiata",
+        "prefixes": ["817", "818", "819", "859"],
+        "apn": "xlgprs",
+    },
+    "three": {
+        "name": "3 (Three)",
+        "prefixes": ["895", "896", "897", "898", "899"],
+        "apn": "3gprs",
+    },
+    "smartfren": {
+        "name": "Smartfren",
+        "prefixes": ["881", "882", "883", "884", "886", "887", "888", "889"],
+        "apn": "smartfren",
+    },
+    "axis": {
+        "name": "Axis",
+        "prefixes": ["831", "832", "833", "838"],
+        "apn": "axis",
+    },
+}
+
+# Indonesian ISPs (Fixed/Broadband)
+INDONESIAN_ISPS: Dict[str, Dict[str, Any]] = {
+    "telkom": {
+        "name": "PT Telkom Indonesia",
+        "product": "Indihome",
+        "asn_patterns": ["AS17974", "AS131111", "AS131112", "AS23700"],
+    },
+    "biznet": {
+        "name": "Biznet Networks",
+        "asn_patterns": ["AS17488", "AS5549"],
+    },
+    "myrepublic": {
+        "name": "MyRepublic",
+        "asn_patterns": ["AS134045"],
+    },
+    "cbn": {
+        "name": "CBN",
+        "asn_patterns": ["AS9244"],
+    },
+    "firstmedia": {
+        "name": "First Media",
+        "asn_patterns": ["AS55660"],
+    },
+    "indosat_gaming": {
+        "name": "Indosat Gaming",
+        "asn_patterns": ["AS4761"],
+    },
+    "xl_home": {
+        "name": "XL Home",
+        "asn_patterns": ["AS24218"],
+    },
 }
 
 # Screen resolutions by OS
@@ -89,36 +359,42 @@ WEBGL_CONFIGS: Dict[str, List[Dict[str, str]]] = {
     ],
 }
 
-# Common fonts by OS and language
+# Indonesian fonts (for locale-aware fingerprinting)
 FONT_LISTS: Dict[str, List[str]] = {
     "windows": [
+        # International fonts (common in Indonesia)
         "Arial", "Arial Black", "Calibri", "Cambria", "Cambria Math",
         "Comic Sans MS", "Consolas", "Courier New", "Georgia", "Impact",
         "Lucida Console", "Lucida Sans Unicode", "Microsoft Sans Serif",
         "Palatino Linotype", "Segoe UI", "Segoe UI Symbol", "Tahoma",
-        "Times New Roman", "Trebuchet MS", "Verdana", "Webdings", "Wingdings"
+        "Times New Roman", "Trebuchet MS", "Verdana", "Webdings", "Wingdings",
+        "Trebuchet MS", "Verdana", "Segoe UI",
     ],
     "mac": [
         "Arial", "Arial Black", "Brush Script MT", "Comic Sans MS", "Courier New",
         "Georgia", "Helvetica", "Helvetica Neue", "Monaco", "Palatino",
-        "San Francisco", "Times New Roman", "Trebuchet MS", "Verdana"
+        "San Francisco", "Times New Roman", "Trebuchet MS", "Verdana",
+        "Menlo", "Monaco",
     ],
     "linux": [
         "DejaVu Sans", "DejaVu Serif", "Liberation Sans", "Liberation Serif",
         "Ubuntu", "Ubuntu Mono", "Noto Sans", "Noto Serif", "Droid Sans",
-        "FreeSans", "Liberation Mono", "Courier New"
+        "FreeSans", "Liberation Mono", "Courier New",
+    ],
+    # Indonesian-specific locales
+    "id": [
+        "Arial", "Segoe UI", "Tahoma", "Verdana", "Trebuchet MS",
+        "Microsoft Sans Serif", "Calibri", "Lucida Sans Unicode",
+        "Times New Roman", "Courier New",
     ],
 }
 
-# Language to fonts mapping
-LANGUAGE_FONTS: Dict[str, List[str]] = {
-    "en": ["Arial", "Helvetica", "Segoe UI", "Sans-serif"],
-    "ja": ["Yu Gothic", "MS Gothic", "Meiryo", "Hiragino Kaku Gothic ProN"],
-    "ko": ["Malgun Gothic", "Nanum Gothic", "Batang"],
-    "zh": ["Microsoft YaHei", "SimSun", "PingFang SC"],
-    "ar": ["Arial", "Tahoma", "Segoe UI", "Traditional Arabic"],
-    "th": ["Tahoma", "Arial", "Segoe UI"],
-    "vi": ["Arial", "Tahoma", "Segoe UI"],
+# Indonesian Locale Configuration
+INDONESIAN_LANGUAGES: Dict[str, List[str]] = {
+    "id-ID": ["id-ID", "id", "en-US", "en"],
+    "id": ["id", "en-US", "en"],
+    "jv-ID": ["jv-ID", "id-ID", "id", "en-US"],  # Javanese
+    "su-ID": ["su-ID", "id-ID", "id", "en-US"],  # Sundanese
 }
 
 
@@ -140,13 +416,18 @@ class FingerprintProfile:
     screen_color_depth: int = 24
     screen_pixel_ratio: float = 1.0
 
-    # Timezone
-    timezone: str = "America/New_York"
-    timezone_offset: int = -300  # minutes
+    # Timezone - DEFAULT TO INDONESIA
+    timezone: str = "Asia/Jakarta"
+    timezone_offset: int = 420  # UTC+7 (WIB) in minutes
 
-    # Language
-    language: str = "en-US"
-    languages: List[str] = field(default_factory=lambda: ["en-US", "en"])
+    # Language - DEFAULT TO INDONESIA
+    language: str = "id-ID"
+    languages: List[str] = field(default_factory=lambda: ["id-ID", "id", "en-US"])
+
+    # Geo targeting
+    country: str = "ID"
+    city: Optional[str] = None  # Indonesian city for precise geo-targeting
+    province: Optional[str] = None
 
     # Canvas
     canvas_hash: str = ""
@@ -173,7 +454,6 @@ class FingerprintProfile:
 
     # Metadata
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
-    country: Optional[str] = None
     seed: int = field(default_factory=lambda: random.randint(0, 2**31 - 1))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -223,6 +503,7 @@ class FingerprintGenerator:
         browser: Optional[str] = None,
         country: Optional[str] = None,
         language: Optional[str] = None,
+        city: Optional[str] = None,
     ) -> FingerprintProfile:
         """
         Generate a coherent fingerprint.
@@ -230,8 +511,9 @@ class FingerprintGenerator:
         Args:
             os: Target OS (windows, mac, linux). If None, randomly selected.
             browser: Target browser (chrome, firefox, safari). If None, randomly selected.
-            country: Target country for timezone matching. If None, randomly selected.
-            language: Target language. If None, based on country or default to en.
+            country: Target country for timezone matching. If None, defaults to Indonesia (ID).
+            language: Target language. If None, based on country or default to id-ID.
+            city: Specific Indonesian city for geo-targeting.
 
         Returns:
             Generated FingerprintProfile with all fingerprint data
@@ -241,9 +523,9 @@ class FingerprintGenerator:
         self._seed = random.randint(0, 2**31 - 1)
         rng = random.Random(self._seed)
 
-        # Select OS and browser
+        # Select OS and browser - WEIGHTED FOR INDONESIA
         if os is None:
-            os = rng.choice(["windows", "windows", "mac", "linux"])  # Weighted
+            os = rng.choice(["windows", "windows", "windows", "mac", "linux"])
         if browser is None:
             browser = "chrome" if os != "mac" else rng.choice(["chrome", "safari"])
         if browser == "firefox":
@@ -253,20 +535,48 @@ class FingerprintGenerator:
         else:
             browser = "chrome"
 
-        # Select country based on OS popularity
+        # Select country - DEFAULT TO INDONESIA
         if country is None:
-            if os == "windows":
-                country = rng.choice(["US", "US", "US", "GB", "DE", "FR", "JP"])
-            elif os == "mac":
-                country = rng.choice(["US", "US", "GB", "AU", "CA", "JP"])
-            else:
-                country = rng.choice(["US", "DE", "GB", "FR", "BR", "IN"])
+            # Heavy weight on Indonesia for Indonesia-focused operations
+            country = rng.choice([
+                "ID", "ID", "ID", "ID", "ID",  # 50% Indonesia
+                "ID-JK", "ID-JB", "ID-JT", "ID-JI", "ID-BT",  # Province targeting
+                "SG", "MY",  # SE Asia neighbors
+                "US", "GB",  # International (low weight)
+            ])
 
-        # Generate timezone from country
-        timezones = COUNTRY_TIMEZONES.get(country, COUNTRY_TIMEZONES["US"])
+        # Handle city-level targeting for Indonesia
+        city_data = None
+        province = None
+        if city and city in INDONESIAN_CITIES:
+            city_data = INDONESIAN_CITIES[city]
+            province = city_data["province"]
+        elif country.startswith("ID-"):
+            # Province-level targeting
+            province_code = country
+            # Map province code to city
+            province_map = {
+                "ID-JK": "jakarta", "ID-DKI": "jakarta",
+                "ID-JB": "bandung", "ID-JT": "semarang", "ID-JI": "surabaya",
+                "ID-BT": "tangerang", "ID-SU": "medan",
+                "ID-SS": "palembang", "ID-CA": "pontianak",
+                "ID-KI": "samarinda", "ID-SA": "makassar", "ID-BA": "denpasar",
+            }
+            city_name = province_map.get(province_code, "jakarta")
+            if city_name in INDONESIAN_CITIES:
+                city_data = INDONESIAN_CITIES[city_name]
+                province = city_data["province"]
+                country = "ID"  # Normalize to ID for timezone lookup
+
+        # Generate timezone from country (falls back to Jakarta)
+        timezones = COUNTRY_TIMEZONES.get(country, COUNTRY_TIMEZONES["ID"])
         timezone = rng.choice(timezones)
 
-        # Generate user agent
+        # Override with city-specific timezone if available
+        if city_data:
+            timezone = city_data["timezone"]
+
+        # Generate user agent - Chrome is dominant in Indonesia
         if browser == "chrome":
             if os == "windows":
                 ua = self._ua_generator.Chrome
@@ -279,9 +589,6 @@ class FingerprintGenerator:
         else:
             ua = self._ua_generator.Safari
 
-        # Parse UA for version
-        ua_major = rng.randint(100, 120) if browser == "chrome" else rng.randint(90, 110)
-
         # Platform string
         platform_map = {
             "windows": "Win32",
@@ -290,7 +597,7 @@ class FingerprintGenerator:
         }
         platform = platform_map.get(os, "Win32")
 
-        # Screen resolution
+        # Screen resolution - Common in Indonesia
         resolutions = OS_RESOLUTIONS.get(os, OS_RESOLUTIONS["windows"])
         screen_res = rng.choice(resolutions)
         screen_width, screen_height = map(int, screen_res.split("x"))
@@ -308,32 +615,40 @@ class FingerprintGenerator:
         webgl_configs = WEBGL_CONFIGS.get(os, WEBGL_CONFIGS["windows"])
         webgl_config = rng.choice(webgl_configs)
 
-        # Fonts
-        fonts = FONT_LISTS.get(os, FONT_LISTS["windows"])
-        num_fonts = rng.randint(20, min(40, len(fonts)))
-        selected_fonts = rng.sample(fonts, num_fonts)
+        # Fonts - Use Indonesian locale if targeting ID
+        if country == "ID" or country.startswith("ID-"):
+            fonts = FONT_LISTS.get("id", FONT_LISTS["windows"])
+        else:
+            fonts = FONT_LISTS.get(os, FONT_LISTS["windows"])
+        num_fonts = rng.randint(15, min(30, len(fonts)))
+        selected_fonts = rng.sample(fonts, min(num_fonts, len(fonts)))
 
-        # Language
+        # Language - DEFAULT TO INDONESIA
         if language is None:
             lang_map = {
+                "ID": "id-ID", "ID-JK": "id-ID", "ID-JB": "id-ID",
+                "ID-JT": "id-ID", "ID-JI": "id-ID", "ID-BT": "id-ID",
+                "ID-SU": "id-ID", "ID-SS": "id-ID", "ID-CA": "id-ID",
+                "ID-KI": "id-ID", "ID-SA": "id-ID", "ID-BA": "id-ID",
+                "SG": "en-SG", "MY": "ms-MY", "TH": "th-TH",
                 "US": "en-US", "GB": "en-GB", "CA": "en-CA",
                 "AU": "en-AU", "DE": "de-DE", "FR": "fr-FR",
                 "JP": "ja-JP", "CN": "zh-CN", "KR": "ko-KR",
                 "BR": "pt-BR", "MX": "es-MX", "ES": "es-ES",
-                "IT": "it-IT", "NL": "nl-NL", "RU": "ru-RU",
-                "IN": "hi-IN", "ID": "id-ID", "TH": "th-TH",
-                "SG": "en-SG", "MY": "ms-MY", "PH": "en-PH",
-                "VN": "vi-VN", "NZ": "en-NZ", "ZA": "en-ZA",
             }
-            language = lang_map.get(country, "en-US")
+            language = lang_map.get(country, "id-ID")  # Default to Indonesian
 
-        languages = [language]
-        if not language.startswith("en"):
-            languages.append("en-US")  # Add English as fallback
+        # Use Indonesian language config
+        if language.startswith("id"):
+            languages = INDONESIAN_LANGUAGES.get(language, ["id-ID", "id", "en-US"])
+        else:
+            languages = [language]
+            if not language.startswith("en"):
+                languages.append("en-US")  # Add English as fallback
 
-        # Hardware
-        hardware_concurrency = rng.choice([2, 4, 4, 6, 8, 12, 16])
-        device_memory = rng.choice([4, 8, 8, 16, 32])
+        # Hardware - Common specs in Indonesia
+        hardware_concurrency = rng.choice([2, 4, 4, 4, 6, 8, 8, 12])
+        device_memory = rng.choice([2, 4, 4, 8, 8, 16])
 
         # Create profile
         profile = FingerprintProfile(
@@ -367,11 +682,14 @@ class FingerprintGenerator:
             hardware_concurrency=hardware_concurrency,
             device_memory=device_memory,
 
-            connection_type=rng.choice(["wifi", "4g", "unknown"]),
-            downlink=rng.uniform(5, 100),
+            connection_type=rng.choice(["wifi", "4g", "4g", "unknown"]),
+            downlink=rng.uniform(5, 50),
             effective_type="4g",
 
-            country=country,
+            country=country if not country.startswith("ID-") else "ID",
+            city=city or (city_data["name"] if city_data else None),
+            province=province or (city_data["province"] if city_data else None),
+
             seed=self._seed,
         )
 
@@ -454,9 +772,20 @@ class FingerprintGenerator:
         """
         Get timezone offset in minutes from UTC.
 
-        This is a simplified version. In production, use pytz or zoneinfo.
+        Includes Indonesia timezones (WIB, WITA, WIT).
         """
-        # Common timezone offsets (simplified)
+        # Indonesia timezones
+        indonesia_offsets = {
+            "Asia/Jakarta": 420,      # WIB (UTC+7)
+            "Asia/Pontianak": 420,    # WIB (UTC+7)
+            "Asia/Makassar": 480,     # WITA (UTC+8)
+            "Asia/Jayapura": 540,      # WIT (UTC+9)
+        }
+
+        if timezone in indonesia_offsets:
+            return indonesia_offsets[timezone]
+
+        # Other timezone offsets
         offsets = {
             "America/New_York": -300,
             "America/Chicago": -360,
@@ -469,6 +798,10 @@ class FingerprintGenerator:
             "Asia/Shanghai": 480,
             "Asia/Singapore": 480,
             "Asia/Seoul": 540,
+            "Asia/Kuala_Lumpur": 480,
+            "Asia/Bangkok": 420,
+            "Asia/Ho_Chi_Minh": 420,
+            "Asia/Manila": 480,
             "Australia/Sydney": 600,
         }
 

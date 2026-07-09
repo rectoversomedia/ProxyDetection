@@ -14,6 +14,71 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 
+# Indonesian IP Prefixes by Region
+INDONESIAN_IP_PATTERNS: Dict[str, Dict[str, Any]] = {
+    "jabodetabek": {
+        "name": "Jabodetabek",
+        "prefixes": [
+            "101.128.", "114.4.", "116.12.", "180.214.", "182.253.",
+            "139.192.", "125.160.", "222.124.", "202.62.", "115.85.",
+        ],
+        "isps": ["telkom", "biznet", "firstmedia", "cbn", "myrepublic"],
+    },
+    "jawa": {
+        "name": "Jawa",
+        "prefixes": [
+            "125.160.", "180.250.", "202.62.", "115.85.", "139.192.",
+            "222.124.", "180.243.", "114.125.", "116.12.", "182.253.",
+        ],
+        "isps": ["telkom", "biznet", "myrepublic"],
+    },
+    "sumatera": {
+        "name": "Sumatera",
+        "prefixes": [
+            "139.192.", "180.243.", "114.125.", "125.214.", "202.70.",
+            "125.160.", "180.250.", "116.12.", "101.128.", "182.253.",
+        ],
+        "isps": ["telkom"],
+    },
+    "kalimantan": {
+        "name": "Kalimantan",
+        "prefixes": [
+            "36.91.", "114.127.", "180.249.", "103.106.", "116.206.",
+            "36.84.", "114.57.", "180.248.", "103.95.", "116.206.",
+        ],
+        "isps": ["telkom"],
+    },
+    "sulawesi": {
+        "name": "Sulawesi",
+        "prefixes": [
+            "180.214.", "114.5.", "116.58.", "202.67.", "125.162.",
+            "114.127.", "180.249.", "103.106.", "116.206.", "36.91.",
+        ],
+        "isps": ["telkom"],
+    },
+    "bali": {
+        "name": "Bali & Nusa Tenggara",
+        "prefixes": [
+            "36.84.", "114.57.", "180.248.", "103.95.", "116.206.",
+            "36.91.", "114.127.", "180.249.", "103.106.", "116.12.",
+        ],
+        "isps": ["telkom"],
+    },
+    "papua": {
+        "name": "Papua & Maluku",
+        "prefixes": [
+            "202.62.", "116.66.", "180.250.", "114.10.", "125.165.",
+            "36.91.", "114.127.", "180.249.", "103.106.", "116.206.",
+        ],
+        "isps": ["telkom"],
+    },
+}
+
+# Default to Indonesia
+DEFAULT_REGION = "jabodetabek"
+DEFAULT_COUNTRY = "ID"
+
+
 @dataclass
 class ProxyConfig:
     """Configuration for a single proxy."""
@@ -111,7 +176,8 @@ class ProxyRotator:
 
     Features:
     - Multiple proxy providers support
-    - Country-based selection
+    - Indonesia-specific geo-targeting
+    - Country and city-based selection
     - Automatic health checking
     - Load balancing across proxies
     - Configurable rotation strategies
@@ -121,6 +187,8 @@ class ProxyRotator:
         self,
         strategy: str = "random",
         health_check_interval: int = 300,
+        default_country: str = "ID",
+        default_region: str = "jabodetabek",
     ):
         """
         Initialize proxy rotator.
