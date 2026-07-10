@@ -5,6 +5,7 @@ This module simulates realistic human behavior patterns including:
 - Log-normal typing patterns
 - Natural scroll behavior
 - Random pauses and delays
+- ML-resistant behavioral patterns
 """
 
 from __future__ import annotations
@@ -19,6 +20,13 @@ from typing import Callable, List, Optional, Tuple, Union
 from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+
+# Lazy import for ML-resistant system to avoid circular imports
+def _get_ml_system():
+    """Lazy import of ML-resistant behavioral system."""
+    from .behavioral_ml import MLResistantBehavioralSystem
+    return MLResistantBehavioralSystem
 
 
 @dataclass
@@ -635,3 +643,249 @@ class BehavioralSimulator:
         for _ in range(num_actions):
             action = self._random.choice(actions)
             await action()
+
+
+# =============================================================================
+# ML-RESISTANT BEHAVIORAL METHODS
+# =============================================================================
+
+def _add_ml_resistant_methods():
+    """Add ML-resistant methods to BehavioralSimulator class."""
+
+    async def move_mouse_ml_resistant(
+        self,
+        page,
+        start: Tuple[float, float],
+        end: Tuple[float, float],
+    ) -> None:
+        """
+        Move mouse with ML-resistant patterns.
+
+        This method uses cognitive simulation, natural errors,
+        and variable timing to evade ML-based detection.
+
+        Args:
+            page: Browser page object
+            start: Starting coordinates (x, y)
+            end: Ending coordinates (x, y)
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+
+        # Generate natural path
+        path = ml_system.mouse.generate_path(start, end, num_points=30)
+
+        # Simulate occasional "look away"
+        if ml_system.should_spoof_human():
+            look_away_time = ml_system.get_look_away_time()
+            # Move cursor away briefly
+            await page.mouse.move(start[0] + 50, start[1] + 50)
+            await asyncio.sleep(look_away_time)
+            await page.mouse.move(start[0], start[0])
+
+        # Execute path with variable timing
+        for x, y, duration_ms in path:
+            await asyncio.sleep(duration_ms / 1000)
+            try:
+                await page.mouse.move(x, y)
+            except Exception as e:
+                logger.debug(f"Mouse move: {e}")
+
+    async def type_text_ml_resistant(
+        self,
+        page,
+        text: str,
+    ) -> None:
+        """
+        Type text with ML-resistant patterns.
+
+        This includes natural typing errors, correction patterns,
+        and variable timing.
+
+        Args:
+            page: Browser page object
+            text: Text to type
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+        error_gen = ml_system.errors
+
+        for char in text:
+            # Occasional thinking pause
+            think_delay = ml_system.timing.get_inter_action_delay("typing")
+            if self._random.random() < 0.1:
+                await asyncio.sleep(think_delay * 2)
+
+            # Check for typo
+            if error_gen.should_make_typo():
+                typo_char = error_gen.get_typo_char(char)
+                try:
+                    await page.keyboard.type(typo_char)
+                except Exception as e:
+                    logger.debug(f"Type error: {e}")
+
+                # Correction delay
+                await asyncio.sleep(error_gen.get_correction_delay())
+
+                # Backspace
+                try:
+                    await page.keyboard.press("Backspace")
+                except Exception as e:
+                    logger.debug(f"Backspace: {e}")
+
+                await asyncio.sleep(error_gen.get_correction_delay())
+
+            # Check for double tap
+            if error_gen.should_double_tap():
+                char_to_type = char + char
+            else:
+                char_to_type = char
+
+            # Type the character(s)
+            try:
+                if char == "\n":
+                    await page.keyboard.press("Enter")
+                    await asyncio.sleep(ml_system.timing.get_typing_delay("special"))
+                elif char == "\t":
+                    await page.keyboard.press("Tab")
+                    await asyncio.sleep(ml_system.timing.get_typing_delay("special"))
+                elif char == " ":
+                    await page.keyboard.press("Space")
+                    await asyncio.sleep(ml_system.timing.get_typing_delay("space"))
+                else:
+                    await page.keyboard.type(char_to_type)
+                    await asyncio.sleep(ml_system.timing.get_typing_delay())
+
+            except Exception as e:
+                logger.debug(f"Type error: {e}")
+
+        # Random pause after typing
+        await asyncio.sleep(self._random.uniform(0.1, 0.5))
+
+    async def click_ml_resistant(
+        self,
+        page,
+        x: float,
+        y: float,
+    ) -> None:
+        """
+        Click with ML-resistant patterns.
+
+        Args:
+            page: Browser page object
+            x: X coordinate
+            y: Y coordinate
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+
+        # Hover before click (like checking target)
+        if ml_system.mouse.should_hover():
+            hover_duration = ml_system.mouse.get_hover_duration()
+            try:
+                await page.mouse.move(x, y)
+            except Exception as e:
+                logger.debug(f"Hover move: {e}")
+            await asyncio.sleep(hover_duration)
+
+        # Small offset
+        offset_x = self._random.uniform(-3, 3)
+        offset_y = self._random.uniform(-3, 3)
+
+        # Move to position
+        await self.move_mouse_ml_resistant(
+            page,
+            (x + offset_x - 20, y + offset_y - 20),
+            (x + offset_x, y + offset_y),
+        )
+
+        # Random delay before click
+        await asyncio.sleep(self._random.uniform(0.05, 0.2))
+
+        # Click
+        try:
+            await page.mouse.click(x + offset_x, y + offset_y)
+        except Exception as e:
+            logger.debug(f"Click: {e}")
+
+        # Delay after click
+        await asyncio.sleep(self._random.uniform(0.05, 0.15))
+
+    async def scroll_ml_resistant(
+        self,
+        page,
+        amount: int,
+        direction: str = "down",
+    ) -> None:
+        """
+        Scroll with ML-resistant patterns.
+
+        Args:
+            page: Browser page object
+            amount: Amount to scroll
+            direction: Scroll direction
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+
+        # Generate scroll sequence
+        scrolls = ml_system.scroll.generate_scroll_sequence(amount, direction)
+
+        for delta, delay in scrolls:
+            await asyncio.sleep(delay)
+            try:
+                if direction in ["up", "down"]:
+                    await page.mouse.wheel(delta_y=-delta if direction == "down" else delta)
+                else:
+                    await page.mouse.wheel(delta_x=delta if direction == "right" else -delta)
+            except Exception as e:
+                logger.debug(f"Scroll: {e}")
+
+    async def human_think(self) -> float:
+        """
+        Simulate human thinking/hesitation.
+
+        Returns:
+            Duration of thinking in seconds
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+        think_time = ml_system.cognitive.simulate_think_time()
+
+        await asyncio.sleep(think_time)
+        return think_time
+
+    async def simulate_fatigue(self, session_duration_minutes: float) -> float:
+        """
+        Simulate session fatigue - gradually slows down behavior.
+
+        Args:
+            session_duration_minutes: How long the session has been running
+
+        Returns:
+            Fatigue multiplier (0.5-1.0)
+        """
+        from .behavioral_ml import get_ml_behavior_system
+
+        ml_system = get_ml_behavior_system()
+        cognitive_state = ml_system.cognitive.get_state()
+
+        # Calculate fatigue
+        fatigue = min(1.0, session_duration_minutes / 30)
+        cognitive_state.fatigue_level = fatigue
+
+        return 1.0 - (fatigue * 0.5)
+
+
+# Add ML-resistant methods to BehavioralSimulator
+BehavioralSimulator.move_mouse_ml_resistant = move_mouse_ml_resistant
+BehavioralSimulator.type_text_ml_resistant = type_text_ml_resistant
+BehavioralSimulator.click_ml_resistant = click_ml_resistant
+BehavioralSimulator.scroll_ml_resistant = scroll_ml_resistant
+BehavioralSimulator.human_think = human_think
+BehavioralSimulator.simulate_fatigue = simulate_fatigue

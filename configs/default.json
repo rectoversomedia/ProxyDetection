@@ -1,5 +1,3 @@
-# Default config
-
 {
     "browser": {
         "type": "camoufox",
@@ -11,7 +9,13 @@
             "randomize_canvas": true,
             "randomize_webgl": true,
             "randomize_audio": true,
-            "mask_webdriver": true
+            "mask_webdriver": true,
+            "tls_fingerprint": "chrome_latest",
+            "http2_settings": "chrome_default",
+            "canvas_spoof": "precomputed",
+            "webgl_spoof": "perfect",
+            "audio_spoof": "perfect",
+            "ml_resistant_behavior": true
         }
     },
     "submission": {
@@ -21,12 +25,105 @@
         "retry_delay": 30,
         "timeout": 120,
         "stop_on_challenge": true,
-        "stop_on_detection": true
+        "stop_on_detection": true,
+        "ml_evasion": true,
+        "cognitive_load_simulation": true,
+        "fatigue_simulation": true
     },
     "proxy": {
         "default_strategy": "random",
         "health_check_interval": 300,
         "min_success_rate": 0.5
+    },
+    "captcha": {
+        "provider": "2captcha",
+        "auto_solve": true,
+        "timeout": 120,
+        "providers": {
+            "2captcha": {
+                "url": "https://2captcha.com",
+                "supports_recaptcha_v2": true,
+                "supports_recaptcha_v3": true,
+                "supports_hcaptcha": true,
+                "supports_turnstile": true,
+                "supports_image": true
+            },
+            "capsolver": {
+                "url": "https://api.capsolver.com",
+                "supports_recaptcha_v2": true,
+                "supports_recaptcha_v3": true,
+                "supports_hcaptcha": true,
+                "supports_turnstile": true,
+                "supports_image": true
+            }
+        }
+    },
+    "fingerprint": {
+        "tls": {
+            "default_profile": "chrome_windows_latest",
+            "profiles": [
+                "chrome_windows_latest",
+                "chrome_mac_latest",
+                "chrome_linux_latest",
+                "chrome_android_latest",
+                "firefox_windows_latest",
+                "firefox_mac_latest",
+                "safari_mac_latest",
+                "edge_windows_latest"
+            ]
+        },
+        "http2": {
+            "default_profile": "chrome_windows",
+            "profiles": [
+                "chrome_windows",
+                "chrome_mac",
+                "firefox_windows",
+                "firefox_mac",
+                "safari_mac",
+                "edge_windows",
+                "chrome_android"
+            ]
+        },
+        "canvas": {
+            "spoof_mode": "precomputed",
+            "default_profile": "chrome_windows_120"
+        },
+        "webgl": {
+            "spoof_mode": "perfect",
+            "default_profile": "windows_nvidia_gtx1060"
+        },
+        "audio": {
+            "spoof_mode": "precomputed",
+            "default_profile": "chrome_windows_120"
+        }
+    },
+    "behavioral": {
+        "ml_resistant": true,
+        "cognitive_simulation": true,
+        "fatigue_simulation": true,
+        "natural_errors": true,
+        "speed_presets": {
+            "slow": {
+                "mouse_duration_range": [0.8, 1.5],
+                "pause_range": [0.3, 0.8],
+                "typing_wpm": 30
+            },
+            "normal": {
+                "mouse_duration_range": [0.3, 0.8],
+                "pause_range": [0.1, 0.3],
+                "typing_wpm": 50
+            },
+            "fast": {
+                "mouse_duration_range": [0.15, 0.4],
+                "pause_range": [0.05, 0.15],
+                "typing_wpm": 80
+            }
+        }
+    },
+    "network": {
+        "tls_http2_enabled": true,
+        "tls_client": "curl_cffi",
+        "default_impersonate": "chrome120"
     },
     "logging": {
         "level": "INFO",

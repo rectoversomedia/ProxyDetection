@@ -18,6 +18,7 @@ from ..utils.retry import async_retry_with_backoff
 from ..antidetect.fingerprint import FingerprintGenerator
 from ..antidetect.profile import BrowserProfile, ProfileManager
 from ..antidetect.behavioral import BehavioralSimulator
+from ..antidetect.captcha_solver import CaptchaSolver, get_captcha_solver
 from ..browser.launcher import BrowserLauncher, BrowserConfig
 from ..proxy.rotator import ProxyRotator, ProxyConfig
 from ..leads.manager import LeadManager, Lead
@@ -138,6 +139,19 @@ class LeadSubmissionEngine:
         self.fingerprint_gen = FingerprintGenerator()
         self.profile_manager = ProfileManager()
         self.browser_launcher = BrowserLauncher()
+        self.captcha_solver = get_captcha_solver()
+
+        # Captcha solving settings
+        self._captcha_api_keys = {
+            "2captcha": self.settings.two_captcha_api_key if hasattr(self.settings, 'two_captcha_api_key') else None,
+            "capsolver": self.settings.capsolver_api_key if hasattr(self.settings, 'capsolver_api_key') else None,
+        }
+        self._auto_solve_captchas = getattr(self.settings, 'auto_solve_captchas', True)
+
+        # Configure captcha solver with API keys
+        for provider, api_key in self._captcha_api_keys.items():
+            if api_key:
+                self.captcha_solver.set_api_key(provider, api_key)
 
         self._running = False
         self._current_session: Optional[Session] = None
@@ -244,7 +258,34 @@ class LeadSubmissionEngine:
                                 cfg.screenshot_dir,
                             )
 
-                        if cfg.stop_on_challenge:
+                        # Auto-solve captcha if enabled
+                        if self._auto_solve_captchas and challenge.get("challenge_type") in ["recaptcha", "hcaptcha", "turnstile"]:
+                            logger.info(f"Attempting to solve {challenge['challenge_type']}...")
+
+                            # Try to solve the captcha
+                            captcha_result = await self._solve_captcha(
+                                browser,
+                                challenge["challenge_type"],
+                                challenge.get("site_key"),
+                                cfg.target_url,
+                            )
+
+                            if captcha_result.success and captcha_result.token:
+                                logger.info(f"Captcha solved successfully!")
+                                # Inject the token and continue
+                                if challenge["challenge_type"] == "recaptcha":
+                                    await browser.evaluate(f"""
+                                        document.querySelector('[name="g-recaptcha-response"]').innerHTML = '{captcha_result.token}';
+                                    """)
+                                # Continue with submission
+                            else:
+                                logger.warning(f"Captcha solving failed: {captcha_result.error}")
+                                if cfg.stop_on_challenge:
+                                    raise ChallengeDetectedError(
+                                        challenge["challenge_type"],
+                                        f"Captcha solving failed: {captcha_result.error}",
+                                    )
+                        elif cfg.stop_on_challenge:
                             raise ChallengeDetectedError(
                                 challenge["challenge_type"],
                                 challenge["message"],
@@ -449,6 +490,72 @@ class LeadSubmissionEngine:
                 await asyncio.sleep(2)  # Wait for submission
             except Exception as e:
                 logger.debug(f"Could not submit: {e}")
+
+    async def _solve_captcha(
+        self,
+        browser,
+        challenge_type: str,
+        site_key: Optional[str],
+        url: str,
+    ) -> Any:
+        """
+        Solve a captcha challenge.
+
+        Args:
+            browser: Browser instance
+            challenge_type: Type of captcha
+            site_key: Site key from the challenge
+            url: Page URL
+
+        Returns:
+            CaptchaResponse
+        """
+        # Try to extract site key if not provided
+        if not site_key:
+            try:
+                site_key_element = await browser.evaluate("""
+                    () => {
+                        const recaptcha = document.querySelector('.g-recaptcha, [data-sitekey]');
+                        return recaptcha ? recaptcha.getAttribute('data-sitekey') : null;
+                    }
+                """)
+                if site_key_element:
+                    site_key = site_key_element
+            except Exception as e:
+                logger.debug(f"Could not extract site key: {e}")
+
+        if not site_key:
+            logger.warning("No site key found for captcha")
+            return CaptchaResponse(
+                success=False,
+                captcha_type=challenge_type,
+                error="No site key found",
+            )
+
+        # Map challenge type to solver type
+        captcha_type_map = {
+            "recaptcha": "recaptcha_v2",
+            "hcaptcha": "hcaptcha",
+            "turnstile": "turnstile",
+        }
+
+        solver_type = captcha_type_map.get(challenge_type, "recaptcha_v2")
+
+        # Solve using captcha solver
+        try:
+            result = await self.captcha_solver.solve(
+                captcha_type=solver_type,
+                site_key=site_key,
+                url=url,
+            )
+            return result
+        except Exception as e:
+            logger.error(f"Captcha solving error: {e}")
+            return CaptchaResponse(
+                success=False,
+                captcha_type=challenge_type,
+                error=str(e),
+            )
 
     def _record_failure(
         self,

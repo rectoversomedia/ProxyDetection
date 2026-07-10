@@ -48,6 +48,10 @@ dependencies = [
     "pillow>=10.0.0",
     "numpy>=1.24.0",
     "pandas>=2.0.0",
+
+    # Anti-Detection Enhancements
+    "curl_cffi>=0.7.0",  # TLS fingerprint control (JA3/JA4)
+    "scipy>=1.11.0",  # ML behavioral patterns
 ]
 
 [project.optional-dependencies]
