@@ -7,9 +7,9 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from ..utils.logger import get_logger
+from src.utils.logger import get_logger
 from .base import BaseProxyProvider
-from .rotator import ProxyConfig
+from ..rotator import ProxyConfig
 
 logger = get_logger(__name__)
 
