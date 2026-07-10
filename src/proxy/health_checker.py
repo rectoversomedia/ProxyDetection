@@ -9,7 +9,7 @@ from typing import Dict, Optional
 import httpx
 
 from src.utils.logger import get_logger
-from ..rotator import ProxyConfig
+from .rotator import ProxyConfig
 
 logger = get_logger(__name__)
 
