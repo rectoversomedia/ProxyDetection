@@ -882,10 +882,5 @@ def _add_ml_resistant_methods():
         return 1.0 - (fatigue * 0.5)
 
 
-# Add ML-resistant methods to BehavioralSimulator
-BehavioralSimulator.move_mouse_ml_resistant = move_mouse_ml_resistant
-BehavioralSimulator.type_text_ml_resistant = type_text_ml_resistant
-BehavioralSimulator.click_ml_resistant = click_ml_resistant
-BehavioralSimulator.scroll_ml_resistant = scroll_ml_resistant
-BehavioralSimulator.human_think = human_think
-BehavioralSimulator.simulate_fatigue = simulate_fatigue
+# ML-resistant methods are now integrated into MLResistantBehavioralSimulator
+# See src/antidetect/behavioral_ml.py for full ML-resistant implementation
