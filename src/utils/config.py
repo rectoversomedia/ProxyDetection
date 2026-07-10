@@ -9,9 +9,16 @@ from typing import Any, Dict, Optional
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from .logger import get_logger
+# Lazy import to avoid circular dependency
+logger = None
 
-logger = get_logger(__name__)
+
+def _get_logger():
+    global logger
+    if logger is None:
+        from .logger import get_logger
+        logger = get_logger(__name__)
+    return logger
 
 
 class Settings(BaseSettings):
